@@ -1,20 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
-import { v4 as uuidv4 } from 'uuid';
 import { Result } from '@shared/api';
-import { isApiResponse } from './isApiResponse';
-import { ApiResponse, ApiResult } from './types';
-
-const convertResult = (results: ApiResult[]): Result[] => {
-  return results.map((result) => {
-    const converted: Result = {
-      id: uuidv4(),
-      name: result.name,
-      description: `Height: ${result.height}`,
-    };
-
-    return converted;
-  });
-};
+import { isApiResponse, convertResult } from './utils';
+import { ApiResponse } from './types';
 
 export const getSearchResult = async (searchTerm: string): Promise<Result[]> => {
   const apiUrl = 'https://swapi.dev/api/people';

@@ -1,4 +1,4 @@
-import { ApiResponse, ApiResult } from './types';
+import { ApiResponse, ApiResult } from '../types';
 
 const isApiResult = (response: unknown): response is ApiResult => {
   return (
