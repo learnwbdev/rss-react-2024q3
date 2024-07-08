@@ -1,14 +1,12 @@
 import axios, { AxiosResponse } from 'axios';
-import { Result } from '@shared/api';
+import { Result, API_URL } from '@shared/api';
 import { isApiResponse, convertResult } from './utils';
 import { ApiResponse } from './types';
 
 export const getSearchResult = async (searchTerm: string): Promise<Result[]> => {
-  const apiUrl = 'https://swapi.dev/api/people';
-
   const pageNumber = 1;
 
-  const url = new URL(apiUrl);
+  const url = new URL(API_URL);
 
   if (searchTerm) url.searchParams.set('search', searchTerm);
   url.searchParams.set('page', pageNumber.toString());
