@@ -1,22 +1,26 @@
 import axios, { AxiosResponse } from 'axios';
 import { Result, API_URL } from '@shared/api';
-import { isApiResponse, convertResult } from './utils';
-import { ApiResponse } from './types';
+import { convertResult, getAllPages, getApiData } from './utils';
 
 export const getSearchResult = async (searchTerm: string): Promise<Result[]> => {
   const pageNumber = 1;
 
   const url = new URL(API_URL);
 
+  const isGetAllItems = !searchTerm;
+
   if (searchTerm) url.searchParams.set('search', searchTerm);
+
+  const baseUrl = url;
+
   url.searchParams.set('page', pageNumber.toString());
 
   try {
-    const response: AxiosResponse<ApiResponse> = await axios.get(url.toString());
+    const response: AxiosResponse<unknown, unknown> = await axios(url.toString());
 
-    const { data } = response;
+    const data = getApiData(response);
 
-    if (!isApiResponse(data)) throw new Error('Incorrect result from Api');
+    if (isGetAllItems) return getAllPages(data, baseUrl);
 
     return convertResult(data.results);
   } catch (err: unknown) {
