@@ -5,6 +5,7 @@ interface InputProps {
   name: string;
   label: string;
   value: string;
+  disabled: boolean;
   onChange: React.ChangeEventHandler;
 }
 
@@ -18,6 +19,7 @@ export class Input extends Component<InputProps> {
           name={this.props.name}
           className={styles.input}
           value={this.props.value}
+          disabled={this.props.disabled}
           onChange={this.props.onChange}
         />
       </label>
