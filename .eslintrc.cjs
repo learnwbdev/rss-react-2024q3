@@ -24,7 +24,7 @@ module.exports = {
     project: ['./tsconfig.app.json', './tsconfig.node.json'],
     tsconfigRootDir: __dirname,
   },
-  plugins: ['react-refresh', '@typescript-eslint', 'eslint-plugin-react-compiler'],
+  plugins: ['react-refresh', '@typescript-eslint', 'eslint-plugin-react-compiler', 'prettier'],
   noInlineConfig: true,
   rules: {
     'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
@@ -32,5 +32,11 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'error',
     '@typescript-eslint/ban-ts-comment': 'error',
     'react-compiler/react-compiler': 'error',
+    'prettier/prettier': [
+      'error',
+      {
+        endOfLine: 'auto',
+      },
+    ],
   },
 };
