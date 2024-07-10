@@ -1,0 +1,35 @@
+.visually_hidden {
+  position: absolute;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.section {
+  display: flex;
+  max-width: 1200px;
+  justify-content: center;
+  border: 2px solid var(--clr-secndry);
+  border-radius: 0.25rem;
+  padding: 2rem;
+  box-shadow: var(--clr-shadow) 0 0.5rem 1.75rem 0;
+}
+
+.results {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .results {
+    grid-template-columns: 1fr;
+  }
+}

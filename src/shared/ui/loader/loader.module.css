@@ -1,0 +1,21 @@
+.loader {
+  width: 0.25rem;
+  height: 0.25rem;
+  border-radius: 999px;
+  color: var(--clr-primary);
+  box-shadow:
+    1rem 0 0 0,
+    0.75rem 0.75rem 0 0.0625rem,
+    0 1rem 0 0.125rem,
+    -0.75rem 0.75rem 0 0.1875rem,
+    -1rem 0 0 0.1875rem,
+    -0.75rem -0.75rem 0 0.25rem,
+    0 -1rem 0 0.25rem;
+  animation: loader-anim 1.25s infinite steps(8);
+}
+
+@keyframes loader-anim {
+  100% {
+    transform: rotate(1turn);
+  }
+}
