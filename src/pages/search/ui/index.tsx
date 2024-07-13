@@ -34,7 +34,7 @@ export class SearchPage extends Component<Record<string, never>, SearchPageState
   render(): React.ReactNode {
     return (
       <main className={styles.page}>
-        <h1 className={styles.visually_hidden}>Class Components</h1>
+        <h1 className={styles.visually_hidden}>React Routing</h1>
         <section className={styles.section}>
           <SearchInput onSearch={this.handleSearch} disabled={this.state.isLoading} />
         </section>
