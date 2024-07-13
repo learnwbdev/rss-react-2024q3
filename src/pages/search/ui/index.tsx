@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { ReactNode, useState, useCallback } from 'react';
 import { SearchInput } from '@widgets/search-input';
 import { SearchResults } from './search-results';
 import { ErrorSection } from './error-section';
@@ -7,48 +7,52 @@ import styles from './styles.module.css';
 import { Loader } from '@shared/ui';
 import { getSearchResult } from '@features/search';
 
-interface SearchPageState {
+interface SearchResultState {
   results: Result[];
   isLoading: boolean;
   isError: boolean;
   error: Error | null;
 }
 
-export class SearchPage extends Component<Record<string, never>, SearchPageState> {
-  state = { results: [], isLoading: false, isError: false, error: null };
+const defaultResult = {
+  results: [],
+  isLoading: false,
+  isError: false,
+  error: null,
+};
 
-  handleSearch = (searchTerm: string): void => {
-    this.setState({ isLoading: true });
+export const SearchPage = (): ReactNode => {
+  const [result, setResult] = useState<SearchResultState>(defaultResult);
 
-    getSearchResult(searchTerm)
-      .then((results) => {
-        this.setState({ results, isLoading: false, isError: false, error: null });
-      })
-      .catch((err: unknown) => {
-        const error = err instanceof Error ? err : new Error('Unknown Api Error');
+  const { results, isLoading, isError } = result;
 
-        this.setState({ results: [], isLoading: false, isError: true, error });
-      });
-  };
+  const handleSearch = useCallback(
+    (searchTerm: string): void => {
+      setResult((prev) => ({ ...prev, isLoading: true }));
 
-  render(): React.ReactNode {
-    return (
-      <main className={styles.page}>
-        <h1 className={styles.visually_hidden}>React Routing</h1>
-        <section className={styles.section}>
-          <SearchInput onSearch={this.handleSearch} disabled={this.state.isLoading} />
-        </section>
-        <section className={styles.section}>
-          {this.state.isLoading ? (
-            <Loader />
-          ) : this.state.isError ? (
-            <div>Api Error</div>
-          ) : (
-            <SearchResults results={this.state.results} />
-          )}
-        </section>
-        <ErrorSection />
-      </main>
-    );
-  }
-}
+      getSearchResult(searchTerm)
+        .then((results) => {
+          setResult({ results, isLoading: false, isError: false, error: null });
+        })
+        .catch((err: unknown) => {
+          const error = err instanceof Error ? err : new Error('Unknown Api Error');
+
+          setResult({ results: [], isLoading: false, isError: true, error });
+        });
+    },
+    [setResult]
+  );
+
+  return (
+    <main className={styles.page}>
+      <h1 className={styles.visually_hidden}>React Routing</h1>
+      <section className={styles.section}>
+        <SearchInput onSearch={handleSearch} disabled={isLoading} />
+      </section>
+      <section className={styles.section}>
+        {isLoading ? <Loader /> : isError ? <div>Api Error</div> : <SearchResults results={results} />}
+      </section>
+      <ErrorSection />
+    </main>
+  );
+};

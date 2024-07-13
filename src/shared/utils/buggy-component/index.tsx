@@ -1,8 +1,6 @@
-import { Component } from 'react';
+import { ReactNode } from 'react';
 
-export class BuggyComponent extends Component {
-  render(): React.ReactNode {
-    throw new Error('Error for Error Boundary Check');
-    return;
-  }
-}
+export const BuggyComponent = (): ReactNode => {
+  throw new Error('Error for Error Boundary Check');
+  return;
+};

@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { ReactNode } from 'react';
 import styles from './button.module.css';
 
 interface ButtonProps {
@@ -7,12 +7,10 @@ interface ButtonProps {
   disabled?: boolean;
 }
 
-export class Button extends Component<ButtonProps> {
-  render(): React.ReactNode {
-    return (
-      <button type="button" className={styles.btn} onClick={this.props.onClick} disabled={this.props.disabled}>
-        {this.props.text}
-      </button>
-    );
-  }
-}
+export const Button = ({ text, onClick, disabled = false }: ButtonProps): ReactNode => {
+  return (
+    <button type="button" className={styles.btn} onClick={onClick} disabled={disabled}>
+      {text}
+    </button>
+  );
+};

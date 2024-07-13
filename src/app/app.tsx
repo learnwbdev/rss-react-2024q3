@@ -1,8 +1,7 @@
-import { Component } from 'react';
+import { ReactNode } from 'react';
 import './app.css';
 import { SearchPage } from '@pages';
-export class App extends Component {
-  render(): React.ReactNode {
-    return <SearchPage />;
-  }
-}
+
+export const App = (): ReactNode => {
+  return <SearchPage />;
+};

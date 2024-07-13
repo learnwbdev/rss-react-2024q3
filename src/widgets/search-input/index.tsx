@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { ReactNode, useState, useEffect } from 'react';
 import { Input, Button } from '@shared/ui';
 import styles from './styles.module.css';
 
@@ -7,60 +7,48 @@ interface SearchInputProps {
   disabled: boolean;
 }
 
-interface SearchInputState {
-  searchTerm: string;
-}
+const saveSearchTerm = (term: string): void => {
+  localStorage.setItem('searchTerm', JSON.stringify(term));
+};
 
-export class SearchInput extends Component<SearchInputProps, SearchInputState> {
-  state = { searchTerm: '' };
+export const SearchInput = ({ onSearch, disabled }: SearchInputProps): ReactNode => {
+  const [searchTerm, setSearchTerm] = useState('');
 
-  saveSearchTerm = (): void => {
-    localStorage.setItem('searchTerm', JSON.stringify(this.state.searchTerm));
-  };
-
-  handleInputChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const { value } = event.target;
 
-    this.setState({ searchTerm: value.trim() });
+    setSearchTerm(value.trim());
   };
 
-  componentDidMount(): void {
+  const handleClick = (): void => {
+    saveSearchTerm(searchTerm);
+    onSearch(searchTerm);
+  };
+
+  useEffect(() => {
     const localStVal = localStorage.getItem('searchTerm');
 
+    const initialVal = '';
+
     if (!localStVal) {
-      this.props.onSearch(this.state.searchTerm);
+      onSearch(initialVal);
       return;
     }
 
-    const searchTerm: unknown = JSON.parse(localStVal);
+    const savedTerm: unknown = JSON.parse(localStVal);
 
-    if (typeof searchTerm === 'string') {
-      this.setState({ searchTerm });
-      this.props.onSearch(searchTerm);
+    if (typeof savedTerm === 'string') {
+      setSearchTerm(savedTerm);
+      onSearch(savedTerm);
     }
-  }
+  }, [onSearch]);
 
-  render(): React.ReactNode {
-    return (
-      <div className={styles.search_input}>
-        <Input
-          name="search"
-          label="Search"
-          value={this.state.searchTerm}
-          onChange={this.handleInputChange}
-          disabled={this.props.disabled}
-        />
-        <div>
-          <Button
-            text="Search"
-            onClick={() => {
-              this.saveSearchTerm();
-              this.props.onSearch(this.state.searchTerm);
-            }}
-            disabled={this.props.disabled}
-          />
-        </div>
+  return (
+    <div className={styles.search_input}>
+      <Input name="search" label="Search" value={searchTerm} onChange={handleInputChange} disabled={disabled} />
+      <div>
+        <Button text="Search" onClick={handleClick} disabled={disabled} />
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
