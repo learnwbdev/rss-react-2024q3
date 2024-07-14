@@ -1,7 +1,8 @@
 import { ReactNode } from 'react';
+import { RouterProvider } from 'react-router-dom';
+import { router } from './router';
 import './app.css';
-import { SearchPage } from '@pages';
 
 export const App = (): ReactNode => {
-  return <SearchPage />;
+  return <RouterProvider router={router} />;
 };
