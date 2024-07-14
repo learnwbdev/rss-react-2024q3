@@ -4,9 +4,13 @@
   --clr-primary: #1de9b6;
   --clr-on-primary: #000021;
   --clr-secndry: #000a47;
+  --clr-tertry: #363073;
+  --clr-on-tertry: #fff;
   --clr-neutral-0: #000;
   --clr-neutral-30: #47474a;
   --clr-neutral-70: #abacaf;
+  --clr-neutral-86: #d6d7d9;
+  --clr-neutral-95: #f0f0f0;
   --clr-neutral-100: #fff;
   --clr-neutral-0-0: #00000000;
   --clr-shadow: #64646f33;
