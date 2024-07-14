@@ -3,9 +3,11 @@ import { SearchInput } from '@widgets/search-input';
 import { SearchResults } from './search-results';
 import { ErrorSection } from './error-section';
 import { Result } from '@shared/api';
-import styles from './styles.module.css';
 import { Loader } from '@shared/ui';
+import { ErrorBoundary } from '@shared/utils';
+import { ErrorFallback } from '@shared/ui';
 import { getSearchResult } from '@features/search';
+import styles from './styles.module.css';
 
 interface SearchResultState {
   results: Result[];
@@ -44,15 +46,17 @@ export const SearchPage = (): ReactNode => {
   );
 
   return (
-    <main className={styles.page}>
-      <h1 className={styles.visually_hidden}>React Routing</h1>
-      <section className={styles.section}>
-        <SearchInput onSearch={handleSearch} disabled={isLoading} />
-      </section>
-      <section className={styles.section}>
-        {isLoading ? <Loader /> : isError ? <div>Api Error</div> : <SearchResults results={results} />}
-      </section>
-      <ErrorSection />
-    </main>
+    <ErrorBoundary fallback={<ErrorFallback />}>
+      <main className={styles.page}>
+        <h1 className={styles.visually_hidden}>React Routing</h1>
+        <section className={styles.section}>
+          <SearchInput onSearch={handleSearch} disabled={isLoading} />
+        </section>
+        <section className={styles.section}>
+          {isLoading ? <Loader /> : isError ? <div>Api Error</div> : <SearchResults results={results} />}
+        </section>
+        <ErrorSection />
+      </main>
+    </ErrorBoundary>
   );
 };
