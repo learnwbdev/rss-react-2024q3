@@ -1,10 +1,10 @@
 import { SearchResult } from '@widgets/search-result';
-import { Result } from '@shared/api';
+import { DataResult } from '@shared/api';
 import { ReactNode } from 'react';
 import styles from './styles.module.css';
 
 interface SearchResultsProps {
-  results: Result[];
+  results: DataResult[];
 }
 
 export const SearchResults = ({ results }: SearchResultsProps): ReactNode => {
