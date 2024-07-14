@@ -11,7 +11,7 @@ export const ErrorSection = (): ReactNode => {
 
   return (
     <section>
-      <Button text="Throw Error" onClick={handleClick} />
+      <Button text="Throw Error" onClick={handleClick} color={'warning'} />
       {isError && <BuggyComponent />}
     </section>
   );
