@@ -23,6 +23,11 @@
     var(--clr-primary) 0 0 0 0.25rem;
 }
 
+.input:disabled {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
 .label {
   display: flex;
   flex-direction: column;
@@ -37,7 +42,7 @@
 }
 
 @media (hover: hover) {
-  .input:hover {
+  .input:hover:not(:disabled) {
     box-shadow:
       0 0 0 0 var(--clr-neutral-100) inset,
       var(--clr-primary) 0 0 0 0.125rem;

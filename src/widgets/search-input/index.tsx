@@ -24,9 +24,22 @@ export const SearchInput = ({ onSearch, disabled }: SearchInputProps): ReactNode
     setInputValue(value.trim());
   };
 
+  const handleEnter = (event: React.KeyboardEvent<HTMLInputElement>): void => {
+    const { key } = event;
+
+    if (key === 'Enter') handleClick();
+  };
+
   return (
     <div className={styles.search_input}>
-      <Input name="search" label="Search" value={inputValue} onChange={handleChange} disabled={disabled} />
+      <Input
+        name="search"
+        label="Search"
+        value={inputValue}
+        onChange={handleChange}
+        onKeyDown={handleEnter}
+        disabled={disabled}
+      />
       <div>
         <Button text="Search" onClick={handleClick} disabled={disabled} />
       </div>
