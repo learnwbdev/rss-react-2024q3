@@ -1,18 +1,31 @@
-import { ReactNode } from 'react';
+import { ComponentProps, ReactNode } from 'react';
 import styles from './button.module.css';
 
-interface ButtonProps {
+interface ButtonProps extends ComponentProps<'button'> {
   text: string;
-  onClick: React.MouseEventHandler;
+  onClick?: React.MouseEventHandler;
   disabled?: boolean;
   color?: 'primary' | 'warning';
 }
 
-export const Button = ({ text, onClick, disabled = false, color = 'primary' }: ButtonProps): ReactNode => {
+export const Button = ({
+  text,
+  onClick,
+  disabled = false,
+  color = 'primary',
+  className,
+  ...props
+}: ButtonProps): ReactNode => {
   const colorClass = color !== 'primary' ? styles[`btn__${color}`] : '';
 
   return (
-    <button type="button" className={`${styles.btn} ${colorClass}`} onClick={onClick} disabled={disabled}>
+    <button
+      type="button"
+      className={`${className} ${styles.btn} ${colorClass}`}
+      onClick={onClick}
+      disabled={disabled}
+      {...props}
+    >
       {text}
     </button>
   );
