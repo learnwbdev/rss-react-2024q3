@@ -17,7 +17,7 @@ const Ellipsis = (): ReactNode => {
   );
 };
 
-export const PaginationPages = ({ page, totalPages, onPageChange }: PaginationPagesProps): ReactNode => {
+const PaginationEllipsis = ({ page, totalPages, onPageChange }: PaginationPagesProps): ReactNode => {
   const fstPage = 1;
   const startShow = 3;
   const endShow = totalPages - startShow + 1;
@@ -54,6 +54,28 @@ export const PaginationPages = ({ page, totalPages, onPageChange }: PaginationPa
             isActivePage={pageNum === page}
           />
         ))
+      )}
+    </>
+  );
+};
+
+export const PaginationPages = ({ page, totalPages, onPageChange }: PaginationPagesProps): ReactNode => {
+  const numShowAll = 5;
+  const fstPage = 1;
+
+  return (
+    <>
+      {totalPages <= numShowAll ? (
+        range(fstPage, totalPages).map((pageNum) => (
+          <PaginationItem
+            key={pageNum}
+            itemPage={pageNum}
+            onPageChange={onPageChange}
+            isActivePage={pageNum === page}
+          />
+        ))
+      ) : (
+        <PaginationEllipsis page={page} totalPages={totalPages} onPageChange={onPageChange} />
       )}
     </>
   );
