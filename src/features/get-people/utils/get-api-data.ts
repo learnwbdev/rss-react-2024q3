@@ -1,11 +1,10 @@
 import { AxiosResponse } from 'axios';
-import { isApiResponse } from './is-api-response';
-import { ApiResponse } from '../types';
+import { ApiPeople, isApiPeople } from '@shared/api';
 
-export const getApiData = (response: AxiosResponse<unknown, unknown>): ApiResponse => {
+export const getApiData = (response: AxiosResponse<unknown, unknown>): ApiPeople => {
   const { data } = response;
 
-  if (!isApiResponse(data)) throw new Error('Incorrect result from Api');
+  if (!isApiPeople(data)) throw new Error('Incorrect result from Api');
 
   return data;
 };

@@ -2,7 +2,7 @@ import { ReactNode, useState, useCallback, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Search } from '@entities';
 import { CardList, ErrorSection } from '@widgets';
-import { DataResponse } from '@shared/api';
+import { People } from '@shared/api';
 import { Loader } from '@shared/ui';
 import { ErrorBoundary } from '@shared/utils';
 import { ErrorFallback } from '@shared/ui';
@@ -12,7 +12,7 @@ import { Pagination } from '@features/pagination';
 import styles from './styles.module.css';
 
 interface SearchResultState {
-  response: DataResponse | Record<string, never>;
+  response: People | Record<string, never>;
   isLoading: boolean;
   isError: boolean;
   error: Error | null;

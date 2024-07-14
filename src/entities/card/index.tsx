@@ -2,15 +2,17 @@ import { ReactNode } from 'react';
 import styles from './styles.module.css';
 
 export interface CardProps {
+  id: number;
   name: string;
-  description: string;
+  height: string;
+  showDetails: (id: number) => void;
 }
 
-export const Card = ({ name, description }: CardProps): ReactNode => {
+export const Card = ({ id, name, height, showDetails }: CardProps): ReactNode => {
   return (
-    <div className={styles.card}>
+    <div className={styles.card} onClick={() => showDetails(id)}>
       <h2>{name}</h2>
-      <p>{description}</p>
+      <p>{`Height: ${height}`}</p>
     </div>
   );
 };

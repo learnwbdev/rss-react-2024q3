@@ -1,8 +1,8 @@
 import axios, { AxiosResponse } from 'axios';
-import { DataResponse, API_URL } from '@shared/api';
+import { People, API_URL } from '@shared/api';
 import { getAllPages, getApiData } from './utils';
 
-export const getPeople = async (searchTerm: string): Promise<DataResponse> => {
+export const getPeople = async (searchTerm: string): Promise<People> => {
   const pageNumber = 1;
 
   const itemsPerPage = 10;

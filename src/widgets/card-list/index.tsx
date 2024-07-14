@@ -1,10 +1,10 @@
 import { Card } from '@entities/card';
-import { DataResult } from '@shared/api';
+import { PersonBrief } from '@shared/api';
 import { ReactNode } from 'react';
 import styles from './styles.module.css';
 
 interface CardListProps {
-  results: DataResult[];
+  results: PersonBrief[];
 }
 
 export const CardList = ({ results }: CardListProps): ReactNode => {
@@ -12,8 +12,16 @@ export const CardList = ({ results }: CardListProps): ReactNode => {
     <div>No results found</div>
   ) : (
     <div className={styles.card_list}>
-      {results.map(({ id, name, description }) => (
-        <Card key={id} name={name} description={description} />
+      {results.map(({ id, name, height }) => (
+        <Card
+          key={id}
+          id={id}
+          name={name}
+          height={height}
+          showDetails={(id: number) => {
+            console.log(id);
+          }}
+        />
       ))}
     </div>
   );

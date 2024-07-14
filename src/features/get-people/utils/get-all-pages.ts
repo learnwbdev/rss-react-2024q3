@@ -1,10 +1,8 @@
 import axios, { AxiosResponse } from 'axios';
-import { DataResult } from '@shared/api';
-import { ApiResponse } from '../types';
-import { convertResult } from './convert-result';
+import { PersonBrief, convertPeople, ApiPeople } from '@shared/api';
 import { getApiData } from './get-api-data';
 
-export const getAllPages = async (data: ApiResponse, url: URL): Promise<DataResult[]> => {
+export const getAllPages = async (data: ApiPeople, url: URL): Promise<PersonBrief[]> => {
   const itemsPerPageApi = 10;
 
   const { count, results: fstPageResults } = data;
@@ -23,11 +21,11 @@ export const getAllPages = async (data: ApiResponse, url: URL): Promise<DataResu
   try {
     const responseArr: AxiosResponse<unknown, unknown>[] = await Promise.all(promises);
 
-    const results: DataResult[] = responseArr.reduce((acc: DataResult[], response) => {
+    const results: PersonBrief[] = responseArr.reduce((acc: PersonBrief[], response) => {
       const { results: apiResults } = getApiData(response);
 
-      return [...acc, ...convertResult(apiResults)];
-    }, convertResult(fstPageResults));
+      return [...acc, ...convertPeople(apiResults)];
+    }, convertPeople(fstPageResults));
 
     return results;
   } catch (err: unknown) {
