@@ -1,6 +1,7 @@
 import { ReactNode, useState, useEffect } from 'react';
 import { Input, Button } from '@shared/ui';
 import styles from './styles.module.css';
+import { jsonParseToType, isString } from '@shared/utils';
 
 interface SearchInputProps {
   onSearch: (searchTerm: string) => void;
@@ -26,21 +27,12 @@ export const SearchInput = ({ onSearch, disabled }: SearchInputProps): ReactNode
   };
 
   useEffect(() => {
-    const localStVal = localStorage.getItem('searchTerm');
+    const localStVal = localStorage.getItem('searchTerm') ?? '';
 
-    const initialVal = '';
+    const initialVal = jsonParseToType(localStVal, isString) ?? '';
 
-    if (!localStVal) {
-      onSearch(initialVal);
-      return;
-    }
-
-    const savedTerm: unknown = JSON.parse(localStVal);
-
-    if (typeof savedTerm === 'string') {
-      setSearchTerm(savedTerm);
-      onSearch(savedTerm);
-    }
+    setSearchTerm(initialVal);
+    onSearch(initialVal);
   }, [onSearch]);
 
   return (
