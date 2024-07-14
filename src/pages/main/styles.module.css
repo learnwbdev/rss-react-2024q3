@@ -25,18 +25,6 @@
   box-shadow: var(--clr-shadow) 0 0.5rem 1.75rem 0;
 }
 
-.results {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.5rem;
-}
-
 .pagination {
   margin: auto;
-}
-
-@media (max-width: 768px) {
-  .results {
-    grid-template-columns: 1fr;
-  }
 }

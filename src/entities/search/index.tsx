@@ -3,12 +3,12 @@ import { Input, Button } from '@shared/ui';
 import { useSearchStorage } from '@shared/hooks';
 import styles from './styles.module.css';
 
-interface SearchInputProps {
+interface SearchProps {
   onSearch: (searchTerm: string) => void;
   disabled: boolean;
 }
 
-export const SearchInput = ({ onSearch, disabled }: SearchInputProps): ReactNode => {
+export const Search = ({ onSearch, disabled }: SearchProps): ReactNode => {
   const [searchTerm, setSearchTerm] = useSearchStorage();
 
   const [inputValue, setInputValue] = useState(searchTerm);
@@ -31,7 +31,7 @@ export const SearchInput = ({ onSearch, disabled }: SearchInputProps): ReactNode
   };
 
   return (
-    <div className={styles.search_input}>
+    <div className={styles.search}>
       <Input
         name="search"
         label="Search"

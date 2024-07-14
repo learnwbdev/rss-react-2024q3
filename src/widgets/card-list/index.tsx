@@ -1,19 +1,19 @@
-import { SearchResult } from '@widgets/search-result';
+import { Card } from '@entities/card';
 import { DataResult } from '@shared/api';
 import { ReactNode } from 'react';
 import styles from './styles.module.css';
 
-interface SearchResultsProps {
+interface CardListProps {
   results: DataResult[];
 }
 
-export const SearchResults = ({ results }: SearchResultsProps): ReactNode => {
+export const CardList = ({ results }: CardListProps): ReactNode => {
   return results.length === 0 ? (
     <div>No results found</div>
   ) : (
-    <div className={styles.results}>
+    <div className={styles.card_list}>
       {results.map(({ id, name, description }) => (
-        <SearchResult key={id} name={name} description={description} />
+        <Card key={id} name={name} description={description} />
       ))}
     </div>
   );

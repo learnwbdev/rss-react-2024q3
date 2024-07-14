@@ -1,14 +1,13 @@
 import { ReactNode, useState, useCallback, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { SearchInput } from '@widgets/search-input';
-import { SearchResults } from './search-results';
-import { ErrorSection } from './error-section';
+import { Search } from '@entities';
+import { CardList, ErrorSection } from '@widgets';
 import { DataResponse } from '@shared/api';
 import { Loader } from '@shared/ui';
 import { ErrorBoundary } from '@shared/utils';
 import { ErrorFallback } from '@shared/ui';
 import { useSearchStorage } from '@shared/hooks';
-import { getSearchResult } from '@features/search';
+import { getPeople } from '@features/get-people';
 import { Pagination } from '@features/pagination';
 import styles from './styles.module.css';
 
@@ -26,7 +25,7 @@ const defaultResult = {
   error: null,
 };
 
-export const SearchPage = (): ReactNode => {
+export const MainPage = (): ReactNode => {
   const initialPage = 1;
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -54,7 +53,7 @@ export const SearchPage = (): ReactNode => {
     (searchTerm: string): void => {
       setResult((prev) => ({ ...prev, isLoading: true }));
 
-      getSearchResult(searchTerm)
+      getPeople(searchTerm)
         .then((response) => {
           setResult({ response, isLoading: false, isError: false, error: null });
         })
@@ -88,14 +87,14 @@ export const SearchPage = (): ReactNode => {
       <main className={styles.page}>
         <h1 className={styles.visually_hidden}>React Routing</h1>
         <section className={styles.section}>
-          <SearchInput onSearch={handleSearch} disabled={isLoading} />
+          <Search onSearch={handleSearch} disabled={isLoading} />
         </section>
         <section className={styles.section}>
           {isLoading && <Loader />}
           {!isLoading && isError && <div>Api Error</div>}
           {!isLoading && !isError && !!results && (
             <>
-              <SearchResults results={results.slice(startItem, stopItem)} />
+              <CardList results={results.slice(startItem, stopItem)} />
               <Pagination
                 className={styles.pagination}
                 page={page}
