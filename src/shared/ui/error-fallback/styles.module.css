@@ -1,5 +1,7 @@
 .fallback {
   display: flex;
+  flex-direction: column;
+  gap: 1rem;
   max-width: 1200px;
   justify-content: center;
   border: 2px solid var(--clr-error);

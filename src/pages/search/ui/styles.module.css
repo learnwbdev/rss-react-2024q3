@@ -14,8 +14,11 @@
 
 .section {
   display: flex;
+  flex-direction: column;
+  gap: 2rem;
   max-width: 1200px;
   justify-content: center;
+  align-items: center;
   border: 2px solid var(--clr-secndry);
   border-radius: 0.25rem;
   padding: 2rem;
@@ -26,6 +29,10 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1.5rem;
+}
+
+.pagination {
+  margin: auto;
 }
 
 @media (max-width: 768px) {
