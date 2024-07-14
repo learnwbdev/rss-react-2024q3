@@ -4,8 +4,10 @@ const isApiPersonBrief = (response: unknown): response is ApiPersonBrief => {
   return (
     !!response &&
     typeof response === 'object' &&
+    'url' in response &&
     'name' in response &&
     'height' in response &&
+    typeof response.url === 'string' &&
     typeof response.name === 'string' &&
     typeof response.height === 'string'
   );

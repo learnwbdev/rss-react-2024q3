@@ -12,14 +12,12 @@ export const CardList = ({ results }: CardListProps): ReactNode => {
     <div>No results found</div>
   ) : (
     <div className={styles.card_list}>
-      {results.map(({ id, name, height }) => (
+      {results.map(({ id, url, name, height }) => (
         <Card
           key={id}
-          id={id}
-          name={name}
-          height={height}
-          showDetails={(id: number) => {
-            console.log(id);
+          personBrief={{ id, url, name, height }}
+          showDetails={(id, url) => {
+            console.log(id, url);
           }}
         />
       ))}

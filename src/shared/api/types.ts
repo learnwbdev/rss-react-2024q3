@@ -1,5 +1,6 @@
 export interface Person {
-  id: number;
+  id: string;
+  url: string;
   name: string;
   height: string;
   mass: string;
@@ -10,7 +11,7 @@ export interface Person {
   gender: string;
 }
 
-export type PersonBrief = Pick<Person, 'id' | 'name' | 'height'>;
+export type PersonBrief = Pick<Person, 'id' | 'url' | 'name' | 'height'>;
 
 export interface People {
   itemsPerPage: number;
@@ -19,6 +20,7 @@ export interface People {
 }
 
 export interface ApiPerson {
+  url: string;
   name: string;
   height: string;
   mass: string;

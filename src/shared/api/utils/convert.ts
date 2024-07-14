@@ -1,11 +1,14 @@
-import { ApiPersonBrief, ApiPerson, PersonBrief, Person } from '../types';
+import { ApiPerson, Person, ApiPersonBrief, PersonBrief } from '../types';
+
+const getIdFromUrl = (url: string): string => url.split('/').slice(-2, -1)[0];
 
 export const convertPeople = (results: ApiPersonBrief[]): PersonBrief[] => {
-  return results.map(({ name, height }, id) => ({ id, name, height }));
+  return results.map(({ url, name, height }) => ({ id: getIdFromUrl(url), url, name, height }));
 };
 
-export const convertPerson = (id: number, result: ApiPerson): Person => {
+export const convertPerson = (result: ApiPerson): Person => {
   const {
+    url,
     name,
     height,
     mass,
@@ -16,5 +19,5 @@ export const convertPerson = (id: number, result: ApiPerson): Person => {
     gender,
   } = result;
 
-  return { id, name, height, mass, hairColor, skinColor, eyeColor, birthYear, gender };
+  return { id: getIdFromUrl(url), url, name, height, mass, hairColor, skinColor, eyeColor, birthYear, gender };
 };
