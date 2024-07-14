@@ -1,5 +1,6 @@
-import { Component } from 'react';
+import { ReactNode, useState } from 'react';
 import { Input, Button } from '@shared/ui';
+import { useSearchStorage } from '@shared/hooks';
 import styles from './styles.module.css';
 
 interface SearchInputProps {
@@ -7,60 +8,41 @@ interface SearchInputProps {
   disabled: boolean;
 }
 
-interface SearchInputState {
-  searchTerm: string;
-}
+export const SearchInput = ({ onSearch, disabled }: SearchInputProps): ReactNode => {
+  const [searchTerm, setSearchTerm] = useSearchStorage();
 
-export class SearchInput extends Component<SearchInputProps, SearchInputState> {
-  state = { searchTerm: '' };
+  const [inputValue, setInputValue] = useState(searchTerm);
 
-  saveSearchTerm = (): void => {
-    localStorage.setItem('searchTerm', JSON.stringify(this.state.searchTerm));
+  const handleClick = (): void => {
+    setSearchTerm(inputValue);
+    onSearch(inputValue);
   };
 
-  handleInputChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const { value } = event.target;
 
-    this.setState({ searchTerm: value.trim() });
+    setInputValue(value.trim());
   };
 
-  componentDidMount(): void {
-    const localStVal = localStorage.getItem('searchTerm');
+  const handleEnter = (event: React.KeyboardEvent<HTMLInputElement>): void => {
+    const { key } = event;
 
-    if (!localStVal) {
-      this.props.onSearch(this.state.searchTerm);
-      return;
-    }
+    if (key === 'Enter') handleClick();
+  };
 
-    const searchTerm: unknown = JSON.parse(localStVal);
-
-    if (typeof searchTerm === 'string') {
-      this.setState({ searchTerm });
-      this.props.onSearch(searchTerm);
-    }
-  }
-
-  render(): React.ReactNode {
-    return (
-      <div className={styles.search_input}>
-        <Input
-          name="search"
-          label="Search"
-          value={this.state.searchTerm}
-          onChange={this.handleInputChange}
-          disabled={this.props.disabled}
-        />
-        <div>
-          <Button
-            text="Search"
-            onClick={() => {
-              this.saveSearchTerm();
-              this.props.onSearch(this.state.searchTerm);
-            }}
-            disabled={this.props.disabled}
-          />
-        </div>
+  return (
+    <div className={styles.search_input}>
+      <Input
+        name="search"
+        label="Search"
+        value={inputValue}
+        onChange={handleChange}
+        onKeyDown={handleEnter}
+        disabled={disabled}
+      />
+      <div>
+        <Button text="Search" onClick={handleClick} disabled={disabled} />
       </div>
-    );
-  }
-}
+    </div>
+  );
+};

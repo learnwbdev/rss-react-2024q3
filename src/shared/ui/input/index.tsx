@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { ReactNode } from 'react';
 import styles from './input.module.css';
 
 interface InputProps {
@@ -6,23 +6,23 @@ interface InputProps {
   label: string;
   value: string;
   disabled: boolean;
-  onChange: React.ChangeEventHandler;
+  onChange: React.ChangeEventHandler<HTMLInputElement>;
+  onKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
 }
 
-export class Input extends Component<InputProps> {
-  render(): React.ReactNode {
-    return (
-      <label className={styles.label}>
-        <span className={styles.label_text}>{`${this.props.label}:`}</span>
-        <input
-          type="text"
-          name={this.props.name}
-          className={styles.input}
-          value={this.props.value}
-          disabled={this.props.disabled}
-          onChange={this.props.onChange}
-        />
-      </label>
-    );
-  }
-}
+export const Input = ({ name, label, value, disabled, onChange, onKeyDown }: InputProps): ReactNode => {
+  return (
+    <label className={styles.label}>
+      <span className={styles.label_text}>{`${label}:`}</span>
+      <input
+        type="text"
+        name={name}
+        className={styles.input}
+        value={value}
+        disabled={disabled}
+        onChange={onChange}
+        onKeyDown={onKeyDown}
+      />
+    </label>
+  );
+};

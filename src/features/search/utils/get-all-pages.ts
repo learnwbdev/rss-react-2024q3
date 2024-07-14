@@ -1,15 +1,15 @@
 import axios, { AxiosResponse } from 'axios';
-import { Result } from '@shared/api';
+import { DataResult } from '@shared/api';
 import { ApiResponse } from '../types';
 import { convertResult } from './convert-result';
 import { getApiData } from './get-api-data';
 
-export const getAllPages = async (data: ApiResponse, url: URL): Promise<Result[]> => {
-  const itemsPerPage = 10;
+export const getAllPages = async (data: ApiResponse, url: URL): Promise<DataResult[]> => {
+  const itemsPerPageApi = 10;
 
   const { count, results: fstPageResults } = data;
 
-  const numPages = Math.ceil(count / itemsPerPage);
+  const numPages = Math.ceil(count / itemsPerPageApi);
 
   const startPage = 2;
 
@@ -23,7 +23,7 @@ export const getAllPages = async (data: ApiResponse, url: URL): Promise<Result[]
   try {
     const responseArr: AxiosResponse<unknown, unknown>[] = await Promise.all(promises);
 
-    const results: Result[] = responseArr.reduce((acc: Result[], response) => {
+    const results: DataResult[] = responseArr.reduce((acc: DataResult[], response) => {
       const { results: apiResults } = getApiData(response);
 
       return [...acc, ...convertResult(apiResults)];

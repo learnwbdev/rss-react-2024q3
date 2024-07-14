@@ -1,11 +1,12 @@
 .btn {
+  --bg-color: var(--clr-primary);
   display: inline-block;
   border-radius: 0.25rem;
   padding: 0.75rem 1.5rem;
   outline: none;
   border: 0;
   color: var(--clr-on-primary);
-  background: var(--clr-primary);
+  background: var(--bg-color);
   user-select: none;
   font-size: 1rem;
   font-weight: 600;
@@ -14,10 +15,26 @@
   transition: all 0.1s ease;
 }
 
+.btn__warning {
+  --bg-color: var(--clr-warning);
+  color: var(--clr-secndry);
+}
+
+.btn:focus {
+  box-shadow:
+    0 0 0 0 var(--clr-neutral-100),
+    0 0 0 0.25rem var(--clr-secndry);
+}
+
+.btn:disabled {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
 @media (hover: hover) {
-  .btn:hover {
+  .btn:hover:not(:disabled) {
     box-shadow:
       0 0 0 0 var(--clr-neutral-100),
-      0 0 0 0.25rem var(--clr-primary);
+      0 0 0 0.25rem var(--bg-color);
   }
 }

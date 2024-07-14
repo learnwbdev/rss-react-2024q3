@@ -1,13 +1,13 @@
 import axios, { AxiosResponse } from 'axios';
-import { Result, API_URL } from '@shared/api';
-import { convertResult, getAllPages, getApiData } from './utils';
+import { DataResponse, API_URL } from '@shared/api';
+import { getAllPages, getApiData } from './utils';
 
-export const getSearchResult = async (searchTerm: string): Promise<Result[]> => {
+export const getSearchResult = async (searchTerm: string): Promise<DataResponse> => {
   const pageNumber = 1;
 
-  const url = new URL(API_URL);
+  const itemsPerPage = 10;
 
-  const isGetAllItems = !searchTerm;
+  const url = new URL(API_URL);
 
   if (searchTerm) url.searchParams.set('search', searchTerm);
 
@@ -20,9 +20,13 @@ export const getSearchResult = async (searchTerm: string): Promise<Result[]> => 
 
     const data = getApiData(response);
 
-    if (isGetAllItems) return getAllPages(data, baseUrl);
+    const { count } = data;
 
-    return convertResult(data.results);
+    const totalPages = Math.ceil(count / itemsPerPage);
+
+    const results = await getAllPages(data, baseUrl);
+
+    return { itemsPerPage, totalPages, results };
   } catch (err: unknown) {
     const error = err instanceof Error ? err : new Error('Unknown Api Error');
 

@@ -1,25 +1,18 @@
 import { Button } from '@shared/ui';
 import { BuggyComponent } from '@shared/utils';
-import { Component } from 'react';
+import { ReactNode, useState } from 'react';
 
-interface ErrorSectionState {
-  isError: boolean;
-}
+export const ErrorSection = (): ReactNode => {
+  const [isError, setIsError] = useState(false);
 
-export class ErrorSection extends Component<Record<string, never>, ErrorSectionState> {
-  state = { isError: false };
+  const handleClick = (): void => {
+    setIsError(true);
+  };
 
-  render(): React.ReactNode {
-    return (
-      <section>
-        <Button
-          text="Throw Error"
-          onClick={() => {
-            this.setState({ isError: true });
-          }}
-        />
-        {this.state.isError && <BuggyComponent />}
-      </section>
-    );
-  }
-}
+  return (
+    <section>
+      <Button text="Throw Error" onClick={handleClick} color={'warning'} />
+      {isError && <BuggyComponent />}
+    </section>
+  );
+};
