@@ -7,10 +7,9 @@ import { DataResponse } from '@shared/api';
 import { Loader } from '@shared/ui';
 import { ErrorBoundary } from '@shared/utils';
 import { ErrorFallback } from '@shared/ui';
-import { SearchTermContext } from '@shared/contexts';
+import { useSearchStorage } from '@shared/hooks';
 import { getSearchResult } from '@features/search';
 import { Pagination } from '@features/pagination';
-import { isString, jsonParseToType } from '@shared/utils';
 import styles from './styles.module.css';
 
 interface SearchResultState {
@@ -34,7 +33,7 @@ export const SearchPage = (): ReactNode => {
 
   const setPage = useCallback((pageNew: number) => setSearchParams({ page: pageNew.toString() }), [setSearchParams]);
 
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm] = useSearchStorage();
 
   const [result, setResult] = useState<SearchResultState>(defaultResult);
   const { response, isLoading, isError } = result;
@@ -77,52 +76,36 @@ export const SearchPage = (): ReactNode => {
   );
 
   useEffect(() => {
-    const localStVal = localStorage.getItem('searchTerm') ?? '';
-
-    const initialVal = jsonParseToType(localStVal, isString) ?? '';
-
-    setSearchTerm(initialVal);
-    getData(initialVal);
-  }, [getData]);
+    getData(searchTerm);
+  }, [searchTerm, getData]);
 
   useEffect(() => {
     if (isSetPage) setPage(initialPage);
   }, [setPage, isSetPage]);
 
-  const handleInputChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>): void => {
-      const { value } = event.target;
-
-      setSearchTerm(value.trim());
-    },
-    [setSearchTerm]
-  );
-
   return (
     <ErrorBoundary fallback={<ErrorFallback />}>
       <main className={styles.page}>
-        <SearchTermContext.Provider value={searchTerm}>
-          <h1 className={styles.visually_hidden}>React Routing</h1>
-          <section className={styles.section}>
-            <SearchInput onSearch={handleSearch} onChange={handleInputChange} disabled={isLoading} />
-          </section>
-          <section className={styles.section}>
-            {isLoading && <Loader />}
-            {!isLoading && isError && <div>Api Error</div>}
-            {!isLoading && !isError && !!results && (
-              <>
-                <SearchResults results={results.slice(startItem, stopItem)} />
-                <Pagination
-                  className={styles.pagination}
-                  page={page}
-                  totalPages={totalPages}
-                  onPageChange={onPageChange}
-                />
-              </>
-            )}
-          </section>
-          <ErrorSection />
-        </SearchTermContext.Provider>
+        <h1 className={styles.visually_hidden}>React Routing</h1>
+        <section className={styles.section}>
+          <SearchInput onSearch={handleSearch} disabled={isLoading} />
+        </section>
+        <section className={styles.section}>
+          {isLoading && <Loader />}
+          {!isLoading && isError && <div>Api Error</div>}
+          {!isLoading && !isError && !!results && (
+            <>
+              <SearchResults results={results.slice(startItem, stopItem)} />
+              <Pagination
+                className={styles.pagination}
+                page={page}
+                totalPages={totalPages}
+                onPageChange={onPageChange}
+              />
+            </>
+          )}
+        </section>
+        <ErrorSection />
       </main>
     </ErrorBoundary>
   );
