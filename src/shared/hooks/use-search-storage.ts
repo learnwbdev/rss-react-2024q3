@@ -1,4 +1,4 @@
-import { isString, jsonParseToType } from '@shared/utils';
+import { isString, localStorageHelper } from '@shared/utils';
 import { useState, useEffect } from 'react';
 
 type UseSearchStorageReturn = [string, React.Dispatch<React.SetStateAction<string>>];
@@ -6,16 +6,10 @@ type UseSearchStorageReturn = [string, React.Dispatch<React.SetStateAction<strin
 const searchKey = 'searchTerm';
 
 const saveSearchTerm = (term: string): void => {
-  window.localStorage.setItem(searchKey, JSON.stringify(term));
+  localStorageHelper.set(searchKey, term);
 };
 
-const getSearchTerm = (): string => {
-  const localStVal = window.localStorage.getItem(searchKey) ?? '';
-
-  const initialVal = jsonParseToType(localStVal, isString) ?? '';
-
-  return initialVal;
-};
+const getSearchTerm = (): string => localStorageHelper.get(searchKey, isString) ?? '';
 
 export const useSearchStorage = (): UseSearchStorageReturn => {
   const [searchTerm, setSearchTerm] = useState(getSearchTerm);
