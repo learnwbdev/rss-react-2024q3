@@ -1,9 +1,10 @@
+import { ReactNode } from 'react';
 import { toggleTheme, useAppDispatch, useAppSelector } from '@shared/store';
 import LightTheme from '@assets/icons/light-theme.svg';
 import DarkTheme from '@assets/icons/dark-theme.svg';
 import styles from './styles.module.css';
 
-export const ThemeToggleBtn = (): React.ReactNode => {
+export const ThemeToggleBtn = (): ReactNode => {
   const { theme } = useAppSelector((store) => store.theme);
 
   const dispatch = useAppDispatch();
