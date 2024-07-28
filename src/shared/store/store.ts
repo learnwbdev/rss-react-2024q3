@@ -1,6 +1,7 @@
 import { combineReducers, configureStore, createListenerMiddleware } from '@reduxjs/toolkit';
 import { themeSlice, toggleTheme } from './slices';
 import { localStorageHelper } from '@shared/utils';
+import { LOCAL_STORAGE_KEY } from '@shared/constants';
 
 const reducer = combineReducers({
   [themeSlice.name]: themeSlice.reducer,
@@ -24,6 +25,6 @@ startAppListening({
     const currentTheme = getState().theme.theme;
 
     document.documentElement.dataset.theme = currentTheme;
-    localStorageHelper.set('theme', currentTheme);
+    localStorageHelper.set(LOCAL_STORAGE_KEY.THEME, currentTheme);
   },
 });

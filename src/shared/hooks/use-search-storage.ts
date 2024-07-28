@@ -1,15 +1,14 @@
+import { LOCAL_STORAGE_KEY } from '@shared/constants';
 import { isString, localStorageHelper } from '@shared/utils';
 import { useState, useEffect } from 'react';
 
 type UseSearchStorageReturn = [string, React.Dispatch<React.SetStateAction<string>>];
 
-const searchKey = 'searchTerm';
-
 const saveSearchTerm = (term: string): void => {
-  localStorageHelper.set(searchKey, term);
+  localStorageHelper.set(LOCAL_STORAGE_KEY.SEARCH_TERM, term);
 };
 
-const getSearchTerm = (): string => localStorageHelper.get(searchKey, isString) ?? '';
+const getSearchTerm = (): string => localStorageHelper.get(LOCAL_STORAGE_KEY.SEARCH_TERM, isString) ?? '';
 
 export const useSearchStorage = (): UseSearchStorageReturn => {
   const [searchTerm, setSearchTerm] = useState(getSearchTerm);

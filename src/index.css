@@ -54,3 +54,7 @@ body {
   background-color: var(--clr-bg);
   color: var(--clr-text);
 }
+
+p {
+  margin: 0.125rem;
+}

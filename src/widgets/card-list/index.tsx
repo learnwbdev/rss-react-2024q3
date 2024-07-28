@@ -13,13 +13,7 @@ export const CardList = ({ results }: CardListProps): ReactNode => {
   ) : (
     <div className={styles.card_list}>
       {results.map(({ id, url, name, height }) => (
-        <Card
-          key={id}
-          personBrief={{ id, url, name, height }}
-          showDetails={(id, url) => {
-            console.log(id, url);
-          }}
-        />
+        <Card key={id} personBrief={{ id, url, name, height }} />
       ))}
     </div>
   );

@@ -1,17 +1,34 @@
-import { ReactNode } from 'react';
-import styles from './styles.module.css';
+import { ReactNode, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { PersonBrief } from '@shared/api';
+import { URL_PARAM } from '@shared/constants';
+import styles from './styles.module.css';
 
 export interface CardProps {
   personBrief: PersonBrief;
-  showDetails: (id: string, url: string) => void;
 }
 
-export const Card = ({ personBrief, showDetails }: CardProps): ReactNode => {
-  const { id, url, name, height } = personBrief;
+export const Card = ({ personBrief }: CardProps): ReactNode => {
+  const [, setSearchParams] = useSearchParams();
+
+  const { id, name, height } = personBrief;
+
+  const setDetails = useCallback(
+    (personId: string) =>
+      setSearchParams((prev) => {
+        prev.set(URL_PARAM.DETAILS, personId);
+        return prev;
+      }),
+    [setSearchParams]
+  );
+
+  const handleOpenDetails = (e: React.MouseEvent<HTMLDivElement, MouseEvent>): void => {
+    e.stopPropagation();
+    setDetails(id);
+  };
 
   return (
-    <div className={styles.card} onClick={() => showDetails(id, url)}>
+    <div className={styles.card} onClick={handleOpenDetails}>
       <h2>{name}</h2>
       <p>{`Height: ${height}`}</p>
     </div>
