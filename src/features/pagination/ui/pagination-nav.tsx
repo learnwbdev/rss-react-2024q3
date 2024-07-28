@@ -1,6 +1,6 @@
 import { ReactNode, ReactEventHandler } from 'react';
-import ChevronLeft from '@assets/chevron-left.svg';
-import ChevronRight from '@assets/chevron-right.svg';
+import ChevronLeft from '@assets/icons/chevron-left.svg';
+import ChevronRight from '@assets/icons/chevron-right.svg';
 import styles from './pagination.module.css';
 
 interface PaginationNavProps {
