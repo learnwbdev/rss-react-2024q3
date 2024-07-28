@@ -1,18 +1,20 @@
 import { combineReducers, configureStore, createListenerMiddleware } from '@reduxjs/toolkit';
-import { themeSlice, toggleTheme, selectedItemsSlice } from './slices';
+import { themeSlice, toggleTheme, selectedItemsSlice, peopleApi } from './slices';
 import { localStorageHelper } from '@shared/utils';
 import { LOCAL_STORAGE_KEY } from '@shared/constants';
 
 const reducer = combineReducers({
   [themeSlice.name]: themeSlice.reducer,
   [selectedItemsSlice.name]: selectedItemsSlice.reducer,
+  [peopleApi.reducerPath]: peopleApi.reducer,
 });
 
 export const listenerMiddleware = createListenerMiddleware();
 
 export const store = configureStore({
   reducer,
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().prepend(listenerMiddleware.middleware),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().prepend(listenerMiddleware.middleware).concat(peopleApi.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

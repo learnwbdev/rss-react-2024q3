@@ -1,7 +1,6 @@
-import { ReactNode, useState, useEffect, useCallback } from 'react';
-import { Person } from '@shared/api';
+import { ReactNode, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { getPerson } from '@features';
+import { peopleApi } from '@shared/store';
 import { Button, Loader } from '@shared/ui';
 import { URL_PARAM } from '@shared/constants';
 import styles from './styles.module.css';
@@ -9,11 +8,9 @@ import styles from './styles.module.css';
 export const DetailedCard = (): ReactNode => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const [isLoading, setIsLoading] = useState(false);
-
-  const [result, setResult] = useState<Person | null>(null);
-
   const personId = searchParams.get('details') ?? '';
+
+  const { data, isFetching } = peopleApi.useGetPersonByIdQuery(personId);
 
   const handleClose = useCallback(() => {
     setSearchParams((prev) => {
@@ -22,24 +19,13 @@ export const DetailedCard = (): ReactNode => {
     });
   }, [setSearchParams]);
 
-  useEffect(() => {
-    if (!personId) return;
+  if (!personId || !data) return null;
 
-    setIsLoading(true);
-
-    getPerson(personId)
-      .then((data: Person) => setResult(data))
-      .catch((err) => console.error(err))
-      .finally(() => setIsLoading(false));
-  }, [personId]);
-
-  if (!personId || !result) return null;
-
-  const { name, height, mass, hairColor, skinColor, eyeColor, birthYear, gender } = result;
+  const { name, height, mass, hairColor, skinColor, eyeColor, birthYear, gender } = data;
 
   return (
     <div className={styles.detailed_card}>
-      {isLoading ? (
+      {isFetching ? (
         <div className={styles.loader}>
           <Loader />
         </div>

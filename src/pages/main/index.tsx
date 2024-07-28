@@ -1,32 +1,16 @@
-import { ReactNode, useState, useCallback, useEffect } from 'react';
+import { ReactNode, useCallback, useEffect } from 'react';
 import { useSearchParams, Outlet } from 'react-router-dom';
 import { Search } from '@entities';
 import { CardList } from '@widgets';
-import { People } from '@shared/api';
 import { Loader } from '@shared/ui';
 import { ErrorBoundary } from '@shared/utils';
 import { ErrorFallback } from '@shared/ui';
 import { useSearchStorage } from '@shared/hooks';
-import { useAppSelector } from '@shared/store';
+import { useAppSelector, peopleApi } from '@shared/store';
 import { SelectedFlyout } from '@widgets';
-import { getPeople } from '@features/get-people';
 import { Pagination } from '@features/pagination';
 import { URL_PARAM } from '@shared/constants';
 import styles from './styles.module.css';
-
-interface SearchResultState {
-  response: People | Record<string, never>;
-  isLoading: boolean;
-  isError: boolean;
-  error: Error | null;
-}
-
-const defaultResult = {
-  response: {},
-  isLoading: false,
-  isError: false,
-  error: null,
-};
 
 export const MainPage = (): ReactNode => {
   const initialPage = 1;
@@ -46,49 +30,28 @@ export const MainPage = (): ReactNode => {
     [setSearchParams]
   );
 
-  const [searchTerm] = useSearchStorage();
-
-  const [result, setResult] = useState<SearchResultState>(defaultResult);
-
-  const { response, isLoading, isError } = result;
-  const { itemsPerPage, totalPages, results } = response;
+  const [searchTerm, setSearchTerm] = useSearchStorage();
 
   const pageStr = searchParams.get(URL_PARAM.PAGE) ?? '';
   const page = Number.parseInt(pageStr) || initialPage;
   const isSetPage = !pageStr;
 
-  const startItem = (page - 1) * itemsPerPage;
-  const stopItem = page * itemsPerPage;
-
   const details = searchParams.get(URL_PARAM.DETAILS) ?? '';
+
+  const { data, error, isFetching } = peopleApi.useGetPeopleQuery({ page, searchTerm });
+
+  const { totalPages, results } = data ?? {};
 
   const onPageChange = (newPage: number): void => {
     setPage(newPage);
   };
 
-  const getData = useCallback(
-    (searchTerm: string): void => {
-      setResult((prev) => ({ ...prev, isLoading: true }));
-
-      getPeople(searchTerm)
-        .then((response) => {
-          setResult({ response, isLoading: false, isError: false, error: null });
-        })
-        .catch((err: unknown) => {
-          const error = err instanceof Error ? err : new Error('Unknown Api Error');
-
-          setResult({ response: {}, isLoading: false, isError: true, error });
-        });
-    },
-    [setResult]
-  );
-
   const handleSearch = useCallback(
     (searchTerm: string): void => {
       setPage(initialPage);
-      getData(searchTerm);
+      setSearchTerm(searchTerm);
     },
-    [getData, setPage]
+    [setPage, setSearchTerm]
   );
 
   const handleDetailsClose = useCallback(() => {
@@ -97,10 +60,6 @@ export const MainPage = (): ReactNode => {
       return prev;
     });
   }, [setSearchParams]);
-
-  useEffect(() => {
-    getData(searchTerm);
-  }, [searchTerm, getData]);
 
   useEffect(() => {
     if (isSetPage) setPage(initialPage);
@@ -113,14 +72,14 @@ export const MainPage = (): ReactNode => {
         <div className={styles.page_details}>
           <div className={styles.content} onClick={handleDetailsClose}>
             <section className={styles.section}>
-              <Search onSearch={handleSearch} disabled={isLoading} />
+              <Search onSearch={handleSearch} disabled={isFetching} />
             </section>
             <section className={styles.section}>
-              {isLoading && <Loader />}
-              {!isLoading && isError && <div>Api Error</div>}
-              {!isLoading && !isError && !!results && (
+              {isFetching && <Loader />}
+              {!isFetching && error && <div>Api Error</div>}
+              {!isFetching && !error && !!data && !!results && !!totalPages && (
                 <>
-                  <CardList results={results.slice(startItem, stopItem)} />
+                  <CardList results={results} />
                   <Pagination
                     className={styles.pagination}
                     page={page}

@@ -14,7 +14,6 @@ export interface Person {
 export type PersonBrief = Pick<Person, 'id' | 'url' | 'name' | 'height'>;
 
 export interface People {
-  itemsPerPage: number;
   totalPages: number;
   results: PersonBrief[];
 }
