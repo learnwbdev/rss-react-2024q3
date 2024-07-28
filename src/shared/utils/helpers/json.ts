@@ -1,6 +1,8 @@
-type TypeGuardCallback<TValue> = (value: unknown) => value is TValue;
+export type TypeGuardCallback<TValue> = (value: unknown) => value is TValue;
 
-export const jsonParseToType = <TValue>(str: string, guardFn: TypeGuardCallback<TValue>): TValue | null => {
+export const jsonParseToType = <TValue>(str: string | null, guardFn: TypeGuardCallback<TValue>): TValue | null => {
+  if (str === null) return null;
+
   try {
     const parsed: unknown = JSON.parse(str);
 

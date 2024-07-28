@@ -1,0 +1,32 @@
+.toolbar {
+  position: sticky;
+  display: flex;
+  justify-content: flex-end;
+  top: 0;
+  padding: 0.5rem;
+  padding-top: 0.25rem;
+  background-color: var(--clr-bg);
+  box-shadow: var(--clr-shadow) 0 0.125rem 0.125rem 0;
+}
+
+.btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 2.5rem;
+  width: 2.5rem;
+  border-radius: 50%;
+  outline: none;
+  border: 0;
+  padding: 0.25rem;
+  color: var(--clr-text);
+  background-color: transparent;
+  cursor: pointer;
+  transition: all 0.1s ease;
+}
+
+@media (hover: hover) {
+  .btn:hover {
+    background-color: var(--clr-hover);
+  }
+}

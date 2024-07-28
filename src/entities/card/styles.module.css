@@ -2,6 +2,22 @@
   display: flex;
   flex-direction: column;
   padding: 1rem 2rem;
-  border: 2px solid var(--clr-neutral-70);
+  box-shadow: inset var(--clr-neutral-70) 0 0 0 0.125rem;
   border-radius: 0.25rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.card:focus {
+  box-shadow:
+    0 0 0 0 var(--clr-neutral-100) inset,
+    0 0 0 0.125rem var(--clr-secndry);
+}
+
+@media (hover: hover) {
+  .card:hover {
+    box-shadow:
+      0 0 0 0 var(--clr-neutral-100) inset,
+      0 0 0 0.125rem var(--clr-primary);
+  }
 }

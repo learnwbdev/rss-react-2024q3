@@ -39,7 +39,7 @@
   line-height: 2.5rem;
   font-weight: 700;
   letter-spacing: -0.025em;
-  color: var(--clr-on-primary);
+  color: var(--clr-header);
 }
 
 .text {
