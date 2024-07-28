@@ -1,1 +1,1 @@
-export * from './isThemeMode';
+export * from './is-theme-mode';
