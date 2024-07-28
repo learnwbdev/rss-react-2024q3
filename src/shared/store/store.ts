@@ -1,10 +1,11 @@
 import { combineReducers, configureStore, createListenerMiddleware } from '@reduxjs/toolkit';
-import { themeSlice, toggleTheme } from './slices';
+import { themeSlice, toggleTheme, selectedItemsSlice } from './slices';
 import { localStorageHelper } from '@shared/utils';
 import { LOCAL_STORAGE_KEY } from '@shared/constants';
 
 const reducer = combineReducers({
   [themeSlice.name]: themeSlice.reducer,
+  [selectedItemsSlice.name]: selectedItemsSlice.reducer,
 });
 
 export const listenerMiddleware = createListenerMiddleware();

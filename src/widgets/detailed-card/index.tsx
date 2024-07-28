@@ -1,7 +1,7 @@
 import { ReactNode, useState, useEffect, useCallback } from 'react';
 import { Person } from '@shared/api';
 import { useSearchParams } from 'react-router-dom';
-import { getPerson } from '@features/get-person';
+import { getPerson } from '@features';
 import { Button, Loader } from '@shared/ui';
 import { URL_PARAM } from '@shared/constants';
 import styles from './styles.module.css';

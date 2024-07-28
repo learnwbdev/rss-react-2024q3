@@ -2,6 +2,7 @@ import { ReactNode, useState } from 'react';
 import { Input, Button } from '@shared/ui';
 import { useSearchStorage } from '@shared/hooks';
 import styles from './styles.module.css';
+import { ErrorSection } from '@widgets/error-section';
 
 interface SearchProps {
   onSearch: (searchTerm: string) => void;
@@ -42,6 +43,9 @@ export const Search = ({ onSearch, disabled }: SearchProps): ReactNode => {
       />
       <div>
         <Button text="Search" onClick={handleClick} disabled={disabled} />
+      </div>
+      <div>
+        <ErrorSection />
       </div>
     </div>
   );

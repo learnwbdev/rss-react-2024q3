@@ -1,12 +1,14 @@
 import { ReactNode, useState, useCallback, useEffect } from 'react';
 import { useSearchParams, Outlet } from 'react-router-dom';
 import { Search } from '@entities';
-import { CardList, ErrorSection } from '@widgets';
+import { CardList } from '@widgets';
 import { People } from '@shared/api';
 import { Loader } from '@shared/ui';
 import { ErrorBoundary } from '@shared/utils';
 import { ErrorFallback } from '@shared/ui';
 import { useSearchStorage } from '@shared/hooks';
+import { useAppSelector } from '@shared/store';
+import { SelectedFlyout } from '@widgets';
 import { getPeople } from '@features/get-people';
 import { Pagination } from '@features/pagination';
 import { URL_PARAM } from '@shared/constants';
@@ -28,6 +30,10 @@ const defaultResult = {
 
 export const MainPage = (): ReactNode => {
   const initialPage = 1;
+
+  const { selectedItems } = useAppSelector((store) => store.selectedItems);
+
+  const hasSelectedItems = selectedItems.length > 0;
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -103,32 +109,38 @@ export const MainPage = (): ReactNode => {
   return (
     <ErrorBoundary fallback={<ErrorFallback />}>
       <main className={styles.page}>
-        <h1 className={styles.visually_hidden}>React Routing</h1>
-        <div className={styles.content} onClick={handleDetailsClose}>
-          <section className={styles.section}>
-            <Search onSearch={handleSearch} disabled={isLoading} />
-          </section>
-          <section className={styles.section}>
-            {isLoading && <Loader />}
-            {!isLoading && isError && <div>Api Error</div>}
-            {!isLoading && !isError && !!results && (
-              <>
-                <CardList results={results.slice(startItem, stopItem)} />
-                <Pagination
-                  className={styles.pagination}
-                  page={page}
-                  totalPages={totalPages}
-                  onPageChange={onPageChange}
-                />
-              </>
-            )}
-          </section>
-          <ErrorSection />
+        <h1 className="visually_hidden">React Routing</h1>
+        <div className={styles.page_details}>
+          <div className={styles.content} onClick={handleDetailsClose}>
+            <section className={styles.section}>
+              <Search onSearch={handleSearch} disabled={isLoading} />
+            </section>
+            <section className={styles.section}>
+              {isLoading && <Loader />}
+              {!isLoading && isError && <div>Api Error</div>}
+              {!isLoading && !isError && !!results && (
+                <>
+                  <CardList results={results.slice(startItem, stopItem)} />
+                  <Pagination
+                    className={styles.pagination}
+                    page={page}
+                    totalPages={totalPages}
+                    onPageChange={onPageChange}
+                  />
+                </>
+              )}
+            </section>
+          </div>
+          {details && (
+            <aside className={`${styles.section} ${styles.aside}`}>
+              <Outlet />
+            </aside>
+          )}
         </div>
-        {details && (
-          <aside className={`${styles.section} ${styles.aside}`}>
-            <Outlet />
-          </aside>
+        {hasSelectedItems && (
+          <section className={styles.section}>
+            <SelectedFlyout />
+          </section>
         )}
       </main>
     </ErrorBoundary>

@@ -1,0 +1,25 @@
+.flyout {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: start;
+  gap: 1.25rem;
+}
+
+.info {
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.actions {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  gap: 1.25rem;
+}
+
+@media (max-width: 768px) {
+  .actions {
+    flex-direction: column;
+  }
+}
