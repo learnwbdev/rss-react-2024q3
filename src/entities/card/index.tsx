@@ -2,7 +2,7 @@ import { ReactNode, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { PersonBrief } from '@shared/api';
 import { URL_PARAM } from '@shared/constants';
-import { toggleSelectedItem, useAppDispatch, useAppSelector } from '@shared/store';
+import { peopleApi, toggleSelectedItem, useAppDispatch, useAppSelector } from '@shared/store';
 import styles from './styles.module.css';
 
 export interface CardProps {
@@ -15,6 +15,8 @@ export const Card = ({ personBrief }: CardProps): ReactNode => {
   const [, setSearchParams] = useSearchParams();
 
   const { selectedItems } = useAppSelector((store) => store.selectedItems);
+
+  const { refetch } = peopleApi.endpoints.getPersonById.useQuerySubscription(id);
 
   const isSelected = selectedItems.includes(id);
 
@@ -34,9 +36,15 @@ export const Card = ({ personBrief }: CardProps): ReactNode => {
     setDetails(id);
   };
 
-  const handleSelect = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    e.stopPropagation();
+  const handleSelect = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    event.stopPropagation();
     dispatch(toggleSelectedItem(id));
+
+    const { target } = event;
+
+    if (target.checked) {
+      void refetch();
+    }
   };
 
   const handleCheckboxClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>): void => {

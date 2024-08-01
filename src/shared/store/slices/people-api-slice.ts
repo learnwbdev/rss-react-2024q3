@@ -24,6 +24,7 @@ export const peopleApi = createApi({
     }),
     getPersonById: builder.query<Person, string>({
       query: (id: string) => `people/${id}`,
+      keepUnusedDataFor: 120 * 60,
       transformResponse: (response: ApiPerson) => convertPerson(response),
     }),
   }),
