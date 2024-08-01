@@ -1,20 +1,29 @@
-import { ReactNode } from 'react';
+import { ReactNode, useCallback, useContext } from 'react';
+import { PageContext } from '../context';
 import styles from './pagination.module.css';
 
 interface PaginationItemProps {
   itemPage: number;
-  onPageChange: (page: number) => void;
   isActivePage?: boolean;
 }
 
-export const PaginationItem = ({ itemPage, onPageChange, isActivePage = false }: PaginationItemProps): ReactNode => {
-  const handleClick = (): void => onPageChange(itemPage);
+export const PaginationItem = ({ itemPage, isActivePage = false }: PaginationItemProps): ReactNode => {
+  const { setPage } = useContext(PageContext);
+
+  const handleClick = useCallback(
+    (event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
+      event.stopPropagation();
+      setPage(itemPage);
+    },
+    [setPage, itemPage]
+  );
 
   return (
     <li aria-current={isActivePage && 'page'}>
       <button
         type="button"
-        className={`${styles.btn} ${styles.page_item} ${isActivePage ? styles.page_item__active : ''}`}
+        className={`${styles.btn_item} ${styles.page_item} ${isActivePage ? styles.page_item__active : ''}`}
+        disabled={isActivePage}
         onClick={handleClick}
       >
         {itemPage}

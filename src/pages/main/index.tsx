@@ -1,19 +1,21 @@
-import { ReactNode, useCallback, useEffect } from 'react';
+import { ReactNode, useCallback } from 'react';
 import { useSearchParams, Outlet } from 'react-router-dom';
 import { Search } from '@entities';
 import { CardList } from '@widgets';
 import { Loader } from '@shared/ui';
 import { ErrorBoundary } from '@shared/utils';
 import { ErrorFallback } from '@shared/ui';
-import { useSearchStorage } from '@shared/hooks';
+import { useLocationPage, useSearchStorage } from '@shared/hooks';
 import { useAppSelector, peopleApi } from '@shared/store';
 import { SelectedFlyout } from '@widgets';
 import { Pagination } from '@features/pagination';
 import { URL_PARAM } from '@shared/constants';
 import styles from './styles.module.css';
 
+const initialPage = 1;
+
 export const MainPage = (): ReactNode => {
-  const initialPage = 1;
+  const { page, setPage } = useLocationPage();
 
   const { selectedItems } = useAppSelector((store) => store.selectedItems);
 
@@ -21,30 +23,13 @@ export const MainPage = (): ReactNode => {
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const setPage = useCallback(
-    (pageNew: number) =>
-      setSearchParams((prev) => {
-        prev.set(URL_PARAM.PAGE, pageNew.toString());
-        return prev;
-      }),
-    [setSearchParams]
-  );
-
   const [searchTerm, setSearchTerm] = useSearchStorage();
-
-  const pageStr = searchParams.get(URL_PARAM.PAGE) ?? '';
-  const page = Number.parseInt(pageStr) || initialPage;
-  const isSetPage = !pageStr;
 
   const details = searchParams.get(URL_PARAM.DETAILS) ?? '';
 
   const { data, error, isFetching } = peopleApi.useGetPeopleQuery({ page, searchTerm });
 
   const { totalPages, results } = data ?? {};
-
-  const onPageChange = (newPage: number): void => {
-    setPage(newPage);
-  };
 
   const handleSearch = useCallback(
     (searchTerm: string): void => {
@@ -61,10 +46,6 @@ export const MainPage = (): ReactNode => {
     });
   }, [setSearchParams]);
 
-  useEffect(() => {
-    if (isSetPage) setPage(initialPage);
-  }, [setPage, isSetPage]);
-
   return (
     <ErrorBoundary fallback={<ErrorFallback />}>
       <main className={styles.page}>
@@ -80,12 +61,7 @@ export const MainPage = (): ReactNode => {
               {!isFetching && !error && !!data && !!results && !!totalPages && (
                 <>
                   <CardList results={results} />
-                  <Pagination
-                    className={styles.pagination}
-                    page={page}
-                    totalPages={totalPages}
-                    onPageChange={onPageChange}
-                  />
+                  <Pagination className={styles.pagination} totalPages={totalPages} />
                 </>
               )}
             </section>

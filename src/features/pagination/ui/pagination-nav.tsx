@@ -1,41 +1,54 @@
-import { ReactNode, ReactEventHandler } from 'react';
+import { ReactNode, useContext, useCallback } from 'react';
 import ChevronLeft from '@assets/icons/chevron-left.svg';
 import ChevronRight from '@assets/icons/chevron-right.svg';
+import { PageContext } from '../context';
 import styles from './pagination.module.css';
 
 interface PaginationNavProps {
-  onClick: ReactEventHandler<HTMLButtonElement>;
+  onClick: () => void;
+  ariaLabel: string;
   children?: ReactNode;
   disabled?: boolean;
 }
 
-interface PaginationNavStartProps {
-  page: number;
-  onPageChange: (page: number) => void;
-}
-
-interface PaginationNavEndProps extends PaginationNavStartProps {
+interface PaginationNavEndProps {
   totalPages: number;
 }
 
-const PaginationNav = ({ onClick, children, disabled = false }: PaginationNavProps): ReactNode => {
+const PaginationNav = ({ onClick, ariaLabel, children, disabled = false }: PaginationNavProps): ReactNode => {
+  const handleClick = useCallback(
+    (event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
+      event.stopPropagation();
+      onClick();
+    },
+    [onClick]
+  );
+
   return (
-    <button type="button" className={`${styles.btn} ${styles.page_nav}`} disabled={disabled} onClick={onClick}>
+    <button
+      type="button"
+      className={`${styles.btn} ${styles.page_nav}`}
+      disabled={disabled}
+      onClick={handleClick}
+      aria-label={ariaLabel}
+    >
       {children}
     </button>
   );
 };
 
-export const PaginationNavStart = ({ page, onPageChange }: PaginationNavStartProps): ReactNode => {
+export const PaginationNavStart = (): ReactNode => {
+  const { page, setPage } = useContext(PageContext);
+
   const frstPage = 1;
 
   const goToPrevPage = (): void => {
-    if (page > frstPage) onPageChange(page - 1);
+    if (page > frstPage) setPage(page - 1);
   };
 
   return (
     <li>
-      <PaginationNav onClick={goToPrevPage} disabled={page === frstPage}>
+      <PaginationNav onClick={goToPrevPage} disabled={page === frstPage} ariaLabel="go to previous page">
         <div className={styles.ico}>
           <ChevronLeft />
         </div>
@@ -44,14 +57,16 @@ export const PaginationNavStart = ({ page, onPageChange }: PaginationNavStartPro
   );
 };
 
-export const PaginationNavEnd = ({ page, totalPages, onPageChange }: PaginationNavEndProps): ReactNode => {
+export const PaginationNavEnd = ({ totalPages }: PaginationNavEndProps): ReactNode => {
+  const { page, setPage } = useContext(PageContext);
+
   const goToNextPage = (): void => {
-    if (page < totalPages) onPageChange(page + 1);
+    if (page < totalPages) setPage(page + 1);
   };
 
   return (
     <li>
-      <PaginationNav onClick={goToNextPage} disabled={page === totalPages}>
+      <PaginationNav onClick={goToNextPage} disabled={page === totalPages} ariaLabel="go to next page">
         <div className={styles.ico}>
           <ChevronRight />
         </div>
