@@ -29,7 +29,6 @@ module.exports = {
   rules: {
     'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
     '@typescript-eslint/no-explicit-any': 'error',
-    '@typescript-eslint/explicit-function-return-type': 'error',
     '@typescript-eslint/ban-ts-comment': 'error',
     'react-compiler/react-compiler': 'error',
     'prettier/prettier': [

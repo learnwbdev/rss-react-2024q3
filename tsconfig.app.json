@@ -37,8 +37,11 @@
       "@widgets": ["widgets"],
       "@entities/*": ["entities/*"],
       "@entities": ["entities"],
-      "@assets/*": ["assets/*"]
+      "@assets/*": ["assets/*"],
+      "@tests/*": ["../tests/*"],
+      "@mock-data": ["../tests/mock-data"],
+      "@mock-data/*": ["../tests/mock-data/*"],
     }
   },
-  "include": ["src", "src/vite-env.d.ts"]
+  "include": ["src", "src/vite-env.d.ts", "tests"]
 }

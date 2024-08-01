@@ -1,7 +1,0 @@
-.search_result {
-  display: flex;
-  flex-direction: column;
-  padding: 1rem 2rem;
-  border: 2px solid var(--clr-neutral-70);
-  border-radius: 0.25rem;
-}

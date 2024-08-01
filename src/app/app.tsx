@@ -1,8 +1,14 @@
 import { ReactNode } from 'react';
 import { RouterProvider } from 'react-router-dom';
+import { useTheme } from '@shared/contexts';
 import { router } from './router';
-import './app.css';
 
 export const App = (): ReactNode => {
-  return <RouterProvider router={router} />;
+  const { theme } = useTheme();
+
+  return (
+    <div className={`app ${theme}`}>
+      <RouterProvider router={router} />
+    </div>
+  );
 };

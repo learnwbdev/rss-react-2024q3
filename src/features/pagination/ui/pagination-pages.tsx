@@ -1,12 +1,11 @@
-import { ReactNode } from 'react';
+import { ReactNode, useContext } from 'react';
 import { PaginationItem } from './pagination-item';
 import { range } from '@shared/utils';
+import { PageContext } from '../context';
 import styles from './pagination.module.css';
 
 interface PaginationPagesProps {
-  page: number;
   totalPages: number;
-  onPageChange: (page: number) => void;
 }
 
 const Ellipsis = (): ReactNode => {
@@ -17,7 +16,9 @@ const Ellipsis = (): ReactNode => {
   );
 };
 
-const PaginationEllipsis = ({ page, totalPages, onPageChange }: PaginationPagesProps): ReactNode => {
+const PaginationEllipsis = ({ totalPages }: PaginationPagesProps): ReactNode => {
+  const { page } = useContext(PageContext);
+
   const fstPage = 1;
   const startShow = 3;
   const endShow = totalPages - startShow + 1;
@@ -25,41 +26,33 @@ const PaginationEllipsis = ({ page, totalPages, onPageChange }: PaginationPagesP
   return (
     <>
       {page > startShow ? (
-        <PaginationItem itemPage={fstPage} onPageChange={onPageChange} isActivePage={page === fstPage} />
+        <PaginationItem itemPage={fstPage} isActivePage={page === fstPage} />
       ) : (
         range(fstPage, startShow).map((pageNum) => (
-          <PaginationItem
-            key={pageNum}
-            itemPage={pageNum}
-            onPageChange={onPageChange}
-            isActivePage={pageNum === page}
-          />
+          <PaginationItem key={pageNum} itemPage={pageNum} isActivePage={pageNum === page} />
         ))
       )}
       <Ellipsis />
       {page > startShow && page < endShow && (
         <>
-          <PaginationItem itemPage={page} onPageChange={onPageChange} isActivePage />
+          <PaginationItem itemPage={page} isActivePage />
           <Ellipsis />
         </>
       )}
       {page < endShow ? (
-        <PaginationItem itemPage={totalPages} onPageChange={onPageChange} isActivePage={page === totalPages} />
+        <PaginationItem itemPage={totalPages} isActivePage={page === totalPages} />
       ) : (
         range(endShow, totalPages).map((pageNum) => (
-          <PaginationItem
-            key={pageNum}
-            itemPage={pageNum}
-            onPageChange={onPageChange}
-            isActivePage={pageNum === page}
-          />
+          <PaginationItem key={pageNum} itemPage={pageNum} isActivePage={pageNum === page} />
         ))
       )}
     </>
   );
 };
 
-export const PaginationPages = ({ page, totalPages, onPageChange }: PaginationPagesProps): ReactNode => {
+export const PaginationPages = ({ totalPages }: PaginationPagesProps): ReactNode => {
+  const { page } = useContext(PageContext);
+
   const numShowAll = 5;
   const fstPage = 1;
 
@@ -67,15 +60,10 @@ export const PaginationPages = ({ page, totalPages, onPageChange }: PaginationPa
     <>
       {totalPages <= numShowAll ? (
         range(fstPage, totalPages).map((pageNum) => (
-          <PaginationItem
-            key={pageNum}
-            itemPage={pageNum}
-            onPageChange={onPageChange}
-            isActivePage={pageNum === page}
-          />
+          <PaginationItem key={pageNum} itemPage={pageNum} isActivePage={pageNum === page} />
         ))
       ) : (
-        <PaginationEllipsis page={page} totalPages={totalPages} onPageChange={onPageChange} />
+        <PaginationEllipsis totalPages={totalPages} />
       )}
     </>
   );

@@ -1,0 +1,21 @@
+.detailed_card {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  gap: 1.5rem;
+  border-radius: 0.25rem;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.375rem;
+}
+
+.details_title {
+  align-self: center;
+}
+.loader {
+  padding: 3rem 2rem;
+}
