@@ -1,6 +1,6 @@
 import { ApiPeople, ApiPerson, ApiPersonBrief } from '../types';
 
-const isApiPersonBrief = (response: unknown): response is ApiPersonBrief => {
+export const isApiPersonBrief = (response: unknown): response is ApiPersonBrief => {
   return (
     !!response &&
     typeof response === 'object' &&

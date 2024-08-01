@@ -58,7 +58,7 @@ export const MainPage = (): ReactNode => {
   return (
     <ErrorBoundary fallback={<ErrorFallback />}>
       <main className={styles.page}>
-        <h1 className="visually_hidden">React Routing</h1>
+        <h1 className="visually_hidden">React is Cool</h1>
         <div className={`${styles.page_details} ${hasSelectedItems ? styles.page_details_flyout : ''}`}>
           <div className={styles.content} onClick={handleDetailsClose}>
             <section className={styles.section}>
