@@ -18,8 +18,6 @@ export const ThemeProvider = ({ children }: { children: ReactNode }): ReactNode 
 
   useEffect(() => {
     localStorageHelper.set(LOCAL_STORAGE_KEY.THEME, theme);
-
-    document.documentElement.dataset.theme = theme;
   }, [theme]);
 
   return <ThemeContext.Provider value={{ theme, toggleTheme }}>{children}</ThemeContext.Provider>;

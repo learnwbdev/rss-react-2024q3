@@ -23,6 +23,7 @@
 .card {
   display: flex;
   width: 100%;
+  min-height: 100%;
   flex-direction: column;
   padding: 1rem 2rem;
   box-shadow: inset var(--clr-neutral-70) 0 0 0 0.125rem;

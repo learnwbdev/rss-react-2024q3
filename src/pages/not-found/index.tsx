@@ -1,8 +1,8 @@
 import { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@shared/ui';
-import styles from './styles.module.css';
 import { ThemeToggleBtn } from '@widgets/theme-toggle-btn';
+import styles from './styles.module.css';
 
 export const NotFoundPage = (): ReactNode => {
   return (
