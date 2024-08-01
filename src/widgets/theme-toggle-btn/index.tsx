@@ -1,24 +1,18 @@
 import { ReactNode } from 'react';
-import { toggleTheme, useAppDispatch, useAppSelector } from '@shared/store';
 import LightTheme from '@assets/icons/light-theme.svg';
 import DarkTheme from '@assets/icons/dark-theme.svg';
 import styles from './styles.module.css';
+import { useTheme } from '@shared/contexts';
 
 export const ThemeToggleBtn = (): ReactNode => {
-  const { theme } = useAppSelector((store) => store.theme);
-
-  const dispatch = useAppDispatch();
-
-  const handleClick = (): void => {
-    dispatch(toggleTheme());
-  };
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <div className={styles.toolbar}>
       <button
         className={styles.btn}
         type="button"
-        onClick={handleClick}
+        onClick={toggleTheme}
         aria-label={`switch to ${theme === 'light' ? 'dark' : 'light'} theme (currently ${theme} theme)`}
       >
         {theme === 'light' ? <LightTheme /> : <DarkTheme />}
