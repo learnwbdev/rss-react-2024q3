@@ -12,6 +12,10 @@
   gap: 2rem;
 }
 
+.page_details_flyout {
+  padding-bottom: 11rem;
+}
+
 .page,
 .content {
   display: flex;

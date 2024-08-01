@@ -50,7 +50,7 @@ export const MainPage = (): ReactNode => {
     <ErrorBoundary fallback={<ErrorFallback />}>
       <main className={styles.page}>
         <h1 className="visually_hidden">React Routing</h1>
-        <div className={styles.page_details}>
+        <div className={`${styles.page_details} ${hasSelectedItems ? styles.page_details_flyout : ''}`}>
           <div className={styles.content} onClick={handleDetailsClose}>
             <section className={styles.section}>
               <Search onSearch={handleSearch} disabled={isFetching} />
@@ -74,7 +74,7 @@ export const MainPage = (): ReactNode => {
         </div>
         {hasSelectedItems && (
           <section className={styles.section}>
-            <SelectedFlyout />
+            <SelectedFlyout isOpen={hasSelectedItems} />
           </section>
         )}
       </main>

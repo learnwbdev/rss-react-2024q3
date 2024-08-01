@@ -4,7 +4,11 @@ import { Button } from '@shared/ui';
 import { DownloadItems } from '@features';
 import styles from './styles.module.css';
 
-export const SelectedFlyout = (): ReactNode => {
+export interface SelectedFlyoutProps {
+  isOpen?: boolean;
+}
+
+export const SelectedFlyout = ({ isOpen = false }: SelectedFlyoutProps): ReactNode => {
   const { selectedItems } = useAppSelector((store) => store.selectedItems);
 
   const selectedCnt = selectedItems.length;
@@ -16,7 +20,7 @@ export const SelectedFlyout = (): ReactNode => {
   };
 
   return (
-    <div className={styles.flyout}>
+    <div className={`${styles.flyout} ${isOpen ? styles.flyout_open : ''}`}>
       <p className={styles.info}>{`${selectedCnt} ${selectedCnt > 1 ? 'items are selected' : 'item is selected'}`}</p>
       <div className={styles.actions}>
         <DownloadItems />
