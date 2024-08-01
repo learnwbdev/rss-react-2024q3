@@ -1,4 +1,4 @@
-import { ReactNode, useCallback } from 'react';
+import { ReactNode, useCallback, useRef } from 'react';
 import { useSearchParams, Outlet } from 'react-router-dom';
 import { Search } from '@entities';
 import { CardList } from '@widgets';
@@ -15,6 +15,8 @@ import styles from './styles.module.css';
 const initialPage = 1;
 
 export const MainPage = (): ReactNode => {
+  const detailedCardRef = useRef(null);
+
   const { page, setPage } = useLocationPage();
 
   const { selectedItems } = useAppSelector((store) => store.selectedItems);
@@ -39,12 +41,19 @@ export const MainPage = (): ReactNode => {
     [setPage, setSearchTerm]
   );
 
-  const handleDetailsClose = useCallback(() => {
-    setSearchParams((prev) => {
-      prev.delete(URL_PARAM.DETAILS);
-      return prev;
-    });
-  }, [setSearchParams]);
+  const handleDetailsClose = useCallback(
+    (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+      const { target } = event;
+
+      if (detailedCardRef.current && detailedCardRef.current !== target) {
+        setSearchParams((prev) => {
+          prev.delete(URL_PARAM.DETAILS);
+          return prev;
+        });
+      }
+    },
+    [setSearchParams]
+  );
 
   return (
     <ErrorBoundary fallback={<ErrorFallback />}>
@@ -67,7 +76,7 @@ export const MainPage = (): ReactNode => {
             </section>
           </div>
           {details && (
-            <aside className={`${styles.section} ${styles.aside}`}>
+            <aside className={`${styles.section} ${styles.aside}`} ref={detailedCardRef}>
               <Outlet />
             </aside>
           )}
