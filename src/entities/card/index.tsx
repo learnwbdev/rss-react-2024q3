@@ -12,7 +12,7 @@ export interface CardProps {
 export const Card = ({ personBrief }: CardProps): ReactNode => {
   const { id, name, height } = personBrief;
 
-  const [, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const { selectedItems } = useAppSelector((store) => store.selectedItems);
 
@@ -23,12 +23,13 @@ export const Card = ({ personBrief }: CardProps): ReactNode => {
   const dispatch = useAppDispatch();
 
   const setDetails = useCallback(
-    (personId: string) =>
-      setSearchParams((prev) => {
-        prev.set(URL_PARAM.DETAILS, personId);
-        return prev;
-      }),
-    [setSearchParams]
+    (personId: string) => {
+      const newSearchParams = new URLSearchParams(searchParams);
+      newSearchParams.set(URL_PARAM.DETAILS, personId);
+
+      setSearchParams(newSearchParams.toString());
+    },
+    [searchParams, setSearchParams]
   );
 
   const handleOpenDetails = (e: React.MouseEvent<HTMLDivElement, MouseEvent>): void => {

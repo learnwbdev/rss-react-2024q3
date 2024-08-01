@@ -13,11 +13,11 @@ export const DetailedCard = (): ReactNode => {
   const { data, isFetching } = peopleApi.useGetPersonByIdQuery(personId);
 
   const handleClose = useCallback(() => {
-    setSearchParams((prev) => {
-      prev.delete(URL_PARAM.DETAILS);
-      return prev;
-    });
-  }, [setSearchParams]);
+    const newSearchParams = new URLSearchParams(searchParams);
+    newSearchParams.delete(URL_PARAM.DETAILS);
+
+    setSearchParams(newSearchParams.toString());
+  }, [searchParams, setSearchParams]);
 
   if (!personId || !data) return null;
 

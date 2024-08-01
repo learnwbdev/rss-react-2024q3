@@ -46,13 +46,13 @@ export const MainPage = (): ReactNode => {
       const { target } = event;
 
       if (detailedCardRef.current && detailedCardRef.current !== target) {
-        setSearchParams((prev) => {
-          prev.delete(URL_PARAM.DETAILS);
-          return prev;
-        });
+        const newSearchParams = new URLSearchParams(searchParams);
+        newSearchParams.delete(URL_PARAM.DETAILS);
+
+        setSearchParams(newSearchParams.toString());
       }
     },
-    [setSearchParams]
+    [searchParams, setSearchParams]
   );
 
   return (
