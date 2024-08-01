@@ -12,29 +12,20 @@ export const selectedItemsSlice = createSlice({
   name: 'selectedItems',
   initialState,
   reducers: {
-    toggleSelectedItem: (state, action: PayloadAction<string>) => {
-      const { selectedItems } = state;
-
+    selectItem: (state, action: PayloadAction<string>) => {
       const itemId = action.payload;
 
-      const selectedIdx = selectedItems.indexOf(itemId);
+      state.selectedItems = [...state.selectedItems, itemId];
+    },
+    unselectItem: (state, action: PayloadAction<string>) => {
+      const itemId = action.payload;
 
-      if (selectedIdx !== -1) {
-        selectedItems.splice(selectedIdx, 1);
-      } else {
-        selectedItems.push(itemId);
-      }
-
-      return state;
+      state.selectedItems = state.selectedItems.filter((item) => item !== itemId);
     },
     unselectAllItems: (state) => {
-      const { selectedItems } = state;
-
-      selectedItems.length = 0;
-
-      return state;
+      state.selectedItems = [];
     },
   },
 });
 
-export const { toggleSelectedItem, unselectAllItems } = selectedItemsSlice.actions;
+export const { selectItem, unselectItem, unselectAllItems } = selectedItemsSlice.actions;
