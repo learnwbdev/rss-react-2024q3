@@ -1,7 +1,8 @@
 import { PropsWithChildren, ReactNode } from 'react';
 import { Provider } from 'react-redux';
 import { RenderOptions, RenderResult, render } from '@testing-library/react';
-import { setupStore, RootState, AppStore } from '@shared/store';
+import userEvent, { UserEvent } from '@testing-library/user-event';
+import { setupStore, RootState, AppStore } from '@store';
 import { ThemeProvider } from '@shared/contexts';
 
 export interface RenderProvidersOptions extends Omit<RenderOptions, 'wrapper'> {
@@ -10,6 +11,7 @@ export interface RenderProvidersOptions extends Omit<RenderOptions, 'wrapper'> {
 }
 
 export interface RenderProvidersResult extends RenderResult {
+  user: UserEvent;
   store: AppStore;
 }
 
@@ -23,6 +25,7 @@ export const renderWithProviders = (ui: ReactNode, options: RenderProvidersOptio
   );
 
   return {
+    user: userEvent.setup(),
     store,
     ...render(ui, { wrapper: WrapperWithProviders, ...renderOptions }),
   };

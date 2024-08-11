@@ -1,8 +1,9 @@
 import { http, HttpResponse, delay } from 'msw';
 import { ApiPeopleMockList } from './mock-data';
+import { API_URL } from '@constants';
 
 export const handlers = [
-  http.get('https://swapi.dev/api/people', ({ request }) => {
+  http.get(API_URL, ({ request }) => {
     const url = new URL(request.url);
 
     const pageStr = url.searchParams.get('page');
@@ -21,7 +22,7 @@ export const handlers = [
 
     return HttpResponse.json({ count: results.length, results: paginatedPeople });
   }),
-  http.get('https://swapi.dev/api/people/:id', ({ params }) => {
+  http.get(`${API_URL}:id`, ({ params }) => {
     const { id } = params;
 
     if (!id || typeof id !== 'string' || isNaN(parseInt(id, 10)) || parseInt(id, 10) <= 0) {
@@ -46,7 +47,7 @@ export const handlers = [
   }),
 ];
 
-export const delayedHandler = http.get('https://swapi.dev/api/people/:id', async ({ params }) => {
+export const delayedHandler = http.get(`${API_URL}:id`, async ({ params }) => {
   const { id } = params;
 
   if (!id || typeof id !== 'string' || isNaN(parseInt(id, 10)) || parseInt(id, 10) <= 0) {

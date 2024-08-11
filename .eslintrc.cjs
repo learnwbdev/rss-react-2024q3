@@ -7,6 +7,7 @@ module.exports = {
     },
   },
   extends: [
+    'next/core-web-vitals',
     'plugin:prettier/recommended',
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended-type-checked',
@@ -16,12 +17,12 @@ module.exports = {
     'plugin:react/jsx-runtime',
     'prettier',
   ],
-  ignorePatterns: ['dist', '.eslintrc.cjs'],
+  ignorePatterns: ['.eslintrc.cjs', 'next.config.mjs'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 'latest',
     sourceType: 'module',
-    project: ['./tsconfig.app.json', './tsconfig.node.json'],
+    project: ['./tsconfig.json'],
     tsconfigRootDir: __dirname,
   },
   plugins: ['react-refresh', '@typescript-eslint', 'eslint-plugin-react-compiler', 'prettier'],
@@ -30,6 +31,13 @@ module.exports = {
     'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
     '@typescript-eslint/no-explicit-any': 'error',
     '@typescript-eslint/ban-ts-comment': 'error',
+    '@typescript-eslint/no-unused-vars': [
+      'error',
+      {
+        destructuredArrayIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+      },
+    ],
     'react-compiler/react-compiler': 'error',
     'prettier/prettier': [
       'error',
@@ -38,4 +46,12 @@ module.exports = {
       },
     ],
   },
+  overrides: [
+    {
+      files: ['src/app/layout.tsx', 'src/pages/index.tsx'],
+      rules: {
+        'react-refresh/only-export-components': 'off',
+      },
+    },
+  ],
 };

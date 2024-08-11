@@ -1,0 +1,10 @@
+.download {
+  position: relative;
+}
+
+.error {
+  position: absolute;
+  left: 0;
+  color: var(--clr-error);
+  width: max-content;
+}

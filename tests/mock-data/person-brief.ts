@@ -1,6 +1,6 @@
-import { PersonBrief } from '@shared/api';
+import { PersonBrief } from '@app-types/person';
 
-const baseMockData = [
+const baseMockData: PersonBrief[] = [
   { id: '1', url: 'https://swapi.dev/api/people/1/', name: 'Luke Skywalker', height: '172' },
   { id: '2', url: 'https://swapi.dev/api/people/2/', name: 'C-3PO', height: '167' },
   { id: '3', url: 'https://swapi.dev/api/people/3/', name: 'R2-D2', height: '96' },

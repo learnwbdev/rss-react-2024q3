@@ -1,4 +1,4 @@
-import { ApiPerson } from '@shared/api';
+import { ApiPerson } from '@app-types/person';
 
 export const ApiPeopleMockList: ApiPerson[] = [
   {
