@@ -1,7 +1,7 @@
-import { render, waitFor } from '@tests/utils';
+import { render, waitFor, renderHook, act } from '@tests/utils';
 import { describe, it, expect, vi } from 'vitest';
 import mockRouter from 'next-router-mock';
-
+import { useLocationPage } from '@hooks';
 import { Pagination } from './index';
 
 vi.mock('next/router', async () => {
@@ -276,5 +276,98 @@ describe('Pagination component', () => {
 
     expect(getByTestId('chevron-left')).toBeInTheDocument();
     expect(getByTestId('chevron-right')).toBeInTheDocument();
+  });
+
+  it('advances to next page if current page < total pages', async () => {
+    const page = 1;
+    const totalPages = 3;
+
+    const { result } = renderHook(() => useLocationPage());
+
+    act(() => {
+      result.current.setPage(page);
+    });
+
+    expect(result.current.page).toBe(page);
+
+    const { getByRole, user } = render(<Pagination totalPages={totalPages} />);
+
+    const nextPageButton = getByRole('button', { name: /go to next page/i });
+
+    expect(nextPageButton).toBeInTheDocument();
+
+    await user.click(nextPageButton);
+
+    expect(result.current.page).toBe(page + 1);
+  });
+
+  it('should not advance page if at last page', async () => {
+    const page = 3;
+    const totalPages = 3;
+
+    const { result } = renderHook(() => useLocationPage());
+
+    act(() => {
+      result.current.setPage(page);
+    });
+
+    expect(result.current.page).toBe(page);
+
+    const { getByRole, user } = render(<Pagination totalPages={totalPages} />);
+
+    const nextPageButton = getByRole('button', { name: /go to next page/i });
+
+    expect(nextPageButton).toBeInTheDocument();
+
+    await user.click(nextPageButton);
+
+    expect(result.current.page).toBe(page);
+  });
+
+  it('advances to previous page if current page > firstPage', async () => {
+    const page = 2;
+    const totalPages = 3;
+
+    const { result } = renderHook(() => useLocationPage());
+
+    act(() => {
+      result.current.setPage(page);
+    });
+
+    expect(result.current.page).toBe(page);
+
+    const { getByRole, user } = render(<Pagination totalPages={totalPages} />);
+
+    const prevPageButton = getByRole('button', { name: /go to previous page/i });
+
+    expect(prevPageButton).toBeInTheDocument();
+
+    await user.click(prevPageButton);
+
+    expect(result.current.page).toBe(page - 1);
+  });
+
+  it('should not advance if current page is first page', async () => {
+    const page = 1;
+
+    const totalPages = 3;
+
+    const { result } = renderHook(() => useLocationPage());
+
+    act(() => {
+      result.current.setPage(page);
+    });
+
+    expect(result.current.page).toBe(page);
+
+    const { getByRole, user } = render(<Pagination totalPages={totalPages} />);
+
+    const prevPageButton = getByRole('button', { name: /go to previous page/i });
+
+    expect(prevPageButton).toBeInTheDocument();
+
+    await user.click(prevPageButton);
+
+    expect(result.current.page).toBe(page);
   });
 });
