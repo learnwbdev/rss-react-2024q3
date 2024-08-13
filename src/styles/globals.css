@@ -80,3 +80,10 @@ p {
   overflow: hidden;
   white-space: nowrap;
 }
+
+.page-loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 3rem;
+}
