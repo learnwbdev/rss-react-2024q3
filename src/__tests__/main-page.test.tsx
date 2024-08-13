@@ -240,7 +240,7 @@ describe('Main page', () => {
 
       const result = await getServerSideProps(context as GetServerSidePropsContext);
 
-      expect(result).toEqual({ props: { data: mockPeopleData, page: 1, personDetail: mockPersonData } });
+      expect(result).toMatchObject({ props: { data: mockPeopleData, page: 1, personDetail: mockPersonData } });
     });
 
     it('returns notFound when API call fails', async () => {
@@ -264,7 +264,7 @@ describe('Main page', () => {
 
       const result = await getServerSideProps(context as GetServerSidePropsContext);
 
-      expect(result).toEqual({ notFound: true });
+      expect(result).toMatchObject({ notFound: true });
     });
 
     it('handles missing query parameters correctly', async () => {
@@ -277,7 +277,7 @@ describe('Main page', () => {
 
       const result = await getServerSideProps(context as GetServerSidePropsContext);
 
-      expect(result).toEqual({
+      expect(result).toMatchObject({
         props: { data: { totalPages, results: PersonBriefMockSubsets[2] }, page: 1, personDetail: null },
       });
     });

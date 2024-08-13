@@ -1,4 +1,5 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { createWrapper } from 'next-redux-wrapper';
 import { selectedItemsSlice, peopleApi } from './slices';
 
 const reducer = combineReducers({
@@ -22,3 +23,5 @@ export const setupStore = (preloadedState?: Partial<RootState>): AppStore => {
     preloadedState,
   });
 };
+
+export const wrapper = createWrapper<AppStore>(() => store);

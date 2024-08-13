@@ -1,10 +1,10 @@
 import 'modern-normalize';
 import '@styles/globals.css';
-import type { AppProps } from 'next/app';
+import { AppProps } from 'next/app';
 import Router from 'next/router';
 import { Provider } from 'react-redux';
 import { useEffect, useState } from 'react';
-import { store } from '@store';
+import { wrapper } from '@store';
 import { ThemeProvider } from '@shared/contexts';
 import { Layout } from '@components/layout';
 import { ErrorFallback } from '@shared/ui';
@@ -12,6 +12,8 @@ import { ErrorBoundary } from '@utils';
 import { Loader } from '@shared/ui';
 
 export default function App({ Component, pageProps }: AppProps) {
+  const { store } = wrapper.useWrappedStore(pageProps);
+
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {

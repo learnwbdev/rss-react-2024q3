@@ -6,7 +6,7 @@ import { Search } from '@entities';
 import { CardList, DetailedCard, SelectedFlyout } from '@widgets';
 import { Loader } from '@shared/ui';
 import { useSearchStorage } from '@hooks';
-import { peopleApi, store, useAppSelector } from '@store';
+import { peopleApi, useAppSelector, wrapper } from '@store';
 import { Pagination } from '@features';
 import { API_URL, URL_PARAM } from '@constants';
 import { People, Person } from '@app-types/person';
@@ -20,7 +20,7 @@ interface MainPageProps {
   page?: number;
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps((store) => async ({ query }) => {
   const {
     [URL_PARAM.PAGE]: page = '1',
     [URL_PARAM.SEARCH]: searchTerm = '',
@@ -63,7 +63,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
       personDetail,
     },
   };
-};
+});
 
 const MainPage = ({ data, personDetail }: MainPageProps): ReactNode => {
   const detailedCardRef = useRef<HTMLDivElement | null>(null);
