@@ -1,13 +1,16 @@
 import { ReactNode } from 'react';
+import { GetServerSidePropsContext } from 'next';
 import { render, waitFor, act } from '@tests/utils';
 import { describe, it, expect, vi } from 'vitest';
+import { http, HttpResponse } from 'msw';
 import mockRouter from 'next-router-mock';
+import { mswServer } from '@tests/msw-server';
 import { peopleApi, selectItem, unselectAllItems } from '@store';
 import { SelectedFlyoutProps } from '@widgets';
-
 import { PeopleMockList, PersonBriefMockSubsets } from '@tests/mock-data';
+import { API_URL, URL_PARAM } from '@constants';
 import { People, Person } from '@app-types/person';
-import MainPage from '@pages/index';
+import MainPage, { getServerSideProps } from '@pages/index';
 
 vi.mock('next/router', async () => {
   const routerMock = await vi.importActual('next-router-mock');
@@ -212,6 +215,103 @@ describe('Main page', () => {
       expect(mockRouter.query).toEqual({ page: '1' });
 
       expect(queryByText('Detailed Card')).not.toBeInTheDocument();
+    });
+  });
+
+  describe('getServerSideProps', () => {
+    it('returns props with data when API call is successful', async () => {
+      const itemsPerPage = 10;
+      const totalPages = Math.ceil(PeopleMockList.length / itemsPerPage);
+
+      const mockPeopleData: People = {
+        totalPages,
+        results: PersonBriefMockSubsets[2],
+      };
+      const mockPersonData = PeopleMockList[0];
+
+      const { id } = mockPersonData;
+
+      const context: Partial<GetServerSidePropsContext> = {
+        query: {
+          [URL_PARAM.PAGE]: '1',
+          [URL_PARAM.DETAILS]: id,
+        },
+      };
+
+      const result = await getServerSideProps(context as GetServerSidePropsContext);
+
+      expect(result).toEqual({ props: { data: mockPeopleData, page: 1, personDetail: mockPersonData } });
+    });
+
+    it('returns notFound when API call fails', async () => {
+      mswServer.use(
+        http.get(
+          API_URL,
+          () =>
+            new HttpResponse(null, {
+              status: 400,
+              statusText: 'Bad Request',
+            })
+        )
+      );
+
+      const context: Partial<GetServerSidePropsContext> = {
+        query: {
+          [URL_PARAM.PAGE]: '1',
+          [URL_PARAM.SEARCH]: 'Luke',
+        },
+      };
+
+      const result = await getServerSideProps(context as GetServerSidePropsContext);
+
+      expect(result).toEqual({ notFound: true });
+    });
+
+    it('handles missing query parameters correctly', async () => {
+      const itemsPerPage = 10;
+      const totalPages = Math.ceil(PeopleMockList.length / itemsPerPage);
+
+      const context: Partial<GetServerSidePropsContext> = {
+        query: {},
+      };
+
+      const result = await getServerSideProps(context as GetServerSidePropsContext);
+
+      expect(result).toEqual({
+        props: { data: { totalPages, results: PersonBriefMockSubsets[2] }, page: 1, personDetail: null },
+      });
+    });
+
+    it('returns personDetail when personId is provided', async () => {
+      const mockPersonData = PeopleMockList[0];
+
+      const { id } = mockPersonData;
+
+      const context: Partial<GetServerSidePropsContext> = {
+        query: {
+          [URL_PARAM.DETAILS]: id,
+        },
+      };
+
+      const result = await getServerSideProps(context as GetServerSidePropsContext);
+
+      expect(result).toMatchObject({
+        props: { personDetail: mockPersonData },
+      });
+    });
+
+    it('returns default page number if page is not specified', async () => {
+      const context: Partial<GetServerSidePropsContext> = {
+        query: {
+          [URL_PARAM.SEARCH]: 'Luke',
+        },
+      };
+
+      const defaultPage = 1;
+
+      const result = await getServerSideProps(context as GetServerSidePropsContext);
+
+      expect(result).toMatchObject({ props: { page: defaultPage } });
     });
   });
 });

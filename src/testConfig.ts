@@ -10,6 +10,7 @@ afterAll(() => mswServer.close());
 
 afterEach(() => {
   cleanup();
+  vi.clearAllTimers();
   vi.clearAllMocks();
   mswServer.resetHandlers();
 });

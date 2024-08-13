@@ -43,13 +43,9 @@ const headers = 'id,url,name,height,mass,hairColor,skinColor,eyeColor,birthYear,
 
 const personStr = '1,https://swapi.dev/api/people/1/,Luke Skywalker,172,77,blond,fair,blue,19BBY,male';
 
-const personStr2 = '2,https://swapi.dev/api/people/2/,C-3PO,167,75,n/a,gold,yellow,112BBY,n/a';
-
 const personCommaStr = '29,https://swapi.dev/api/people/29/,"Wicket, Systri Warrick",88,20,brown,brown,brown,8BBY,male';
 
 const personNewLineStr = '30,https://swapi.dev/api/people/30/,"Nien\nNunb",160,68,none,grey,black,unknown,male';
-
-export const personCsvExpect = `${headers}\r\n${personStr}\r\n${personStr2}`;
 
 export const PeopleMockCsvCheck = { person, personComma, personNewLine };
 
