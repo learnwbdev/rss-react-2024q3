@@ -256,4 +256,25 @@ describe('Pagination component', () => {
       expect(pageBtn).toBeInTheDocument();
     }
   });
+
+  it('renders all pages when totalPages is less than or equal to 5', () => {
+    const totalPages = 5;
+
+    const { getByRole } = render(<Pagination totalPages={totalPages} />);
+
+    for (let page = 1; page <= totalPages; page++) {
+      const pageBtn = getByRole('button', { name: `${page}` });
+
+      expect(pageBtn).toBeInTheDocument();
+    }
+  });
+
+  it('renders start and end chevrons', () => {
+    const totalPages = 5;
+
+    const { getByTestId } = render(<Pagination totalPages={totalPages} />);
+
+    expect(getByTestId('chevron-left')).toBeInTheDocument();
+    expect(getByTestId('chevron-right')).toBeInTheDocument();
+  });
 });
