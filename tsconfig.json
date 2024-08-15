@@ -1,11 +1,63 @@
 {
-  "files": [],
-  "references": [
-    {
-      "path": "./tsconfig.app.json"
+  "compilerOptions": {
+    "composite": true,
+    "incremental": true,
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "preserve",
+
+    /* Linting */
+    "strict": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "allowJs": true,
+    "forceConsistentCasingInFileNames": true,
+
+    /* Paths */
+    "baseUrl": ".",
+    "paths": {
+      "@pages/*": ["src/pages/*"],
+      "@components/*": ["src/components/*"],
+      "@shared/*": ["src/components/shared/*"],
+      "@widgets": ["src/components/widgets"],
+      "@entities": ["src/components/entities"],
+      "@features": ["src/components/features"],
+      "@store": ["src/store"],
+      "@constants": ["src/constants"],
+      "@hooks": ["src/hooks"],
+      "@utils": ["src/utils"],
+      "@app-types/*": ["src/types/*"],
+      "@styles/*": ["src/styles/*"],
+      "@icons/*": ["public/icons/*"],
+      "@tests/*": ["tests/*"],
+      "@mock-data": ["tests/mock-data"],
+      "@mock-data/*": ["tests/mock-data/*"],
     },
-    {
-      "path": "./tsconfig.node.json"
-    }
-  ]
+    "plugins": [{ "name": "next" }]
+  },
+  "include": [
+    "src",
+    "src/**/*",
+    "tests/**/*",
+    "**/*.ts",
+    "**/*.tsx",
+    "svgr.d.ts",
+    "next-env.d.ts",
+    "./dist/types/**/*.ts",
+  ],
+  "exclude": ["node_modules"]
 }

@@ -1,4 +1,4 @@
-import { Person } from '@shared/api';
+import { Person } from '@app-types/person';
 
 const person: Person = {
   id: '1',
@@ -13,7 +13,7 @@ const person: Person = {
   gender: 'male',
 };
 
-const personComma = {
+const personComma: Person = {
   id: '29',
   url: 'https://swapi.dev/api/people/29/',
   name: 'Wicket, Systri Warrick',
@@ -26,7 +26,7 @@ const personComma = {
   gender: 'male',
 };
 
-const personNewLine = {
+const personNewLine: Person = {
   id: '30',
   url: 'https://swapi.dev/api/people/30/',
   name: 'Nien\nNunb',

@@ -1,4 +1,4 @@
-import { Person } from '@shared/api';
+import { Person } from '@app-types/person';
 
 export const PeopleMockList: Person[] = [
   {
