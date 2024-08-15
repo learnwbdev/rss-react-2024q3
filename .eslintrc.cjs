@@ -17,7 +17,7 @@ module.exports = {
     'plugin:react/jsx-runtime',
     'prettier',
   ],
-  ignorePatterns: ['.eslintrc.cjs', 'next.config.mjs'],
+  ignorePatterns: ['dist', '.eslintrc.cjs', 'next.config.mjs', 'node_modules'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 'latest',
