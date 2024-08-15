@@ -1,4 +1,4 @@
-import { ApiPeople, ApiPerson, ApiPersonBrief } from '@app-types/person';
+import { ApiPeople, ApiPerson, ApiPersonBrief } from '@app-types';
 
 export const isApiPersonBrief = (response: unknown): response is ApiPersonBrief => {
   return (

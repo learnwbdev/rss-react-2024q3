@@ -12,7 +12,7 @@ describe('ErrorSection', () => {
     expect(throwErrorBtn).toBeInTheDocument();
   });
 
-  it('does not render BuggyComponent initially', () => {
+  it('does not render ErrorSimulator initially', () => {
     const { queryByText } = render(<ErrorSection />);
 
     const errorTextRegex = new RegExp('there was an error', 'i');

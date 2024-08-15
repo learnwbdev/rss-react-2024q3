@@ -1,3 +1,5 @@
+'use client';
+
 import { ReactNode, ComponentProps } from 'react';
 import { PaginationNavEnd, PaginationNavStart } from './pagination-nav';
 import { PaginationPages } from './pagination-pages';

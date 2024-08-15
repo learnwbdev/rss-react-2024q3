@@ -1,14 +1,30 @@
 import { render, waitFor, act } from '@tests/utils';
 import { describe, it, expect, vi } from 'vitest';
-import mockRouter from 'next-router-mock';
-
 import { PersonBriefMockSubsets } from '@mock-data';
-import { SelectedItemsState, setupStore, selectItem } from '@store';
+import { setupStore } from '@store';
+import { SelectedItemsState, selectItem } from '@lib-features/selected-items';
 import { Card } from './index';
+import { URL_PARAM } from '@constants';
 
-vi.mock('next/router', async () => {
-  const routerMock = await vi.importActual('next-router-mock');
-  return routerMock;
+const mockRouter = {
+  push: vi.fn(),
+  replace: vi.fn(),
+  refresh: vi.fn(),
+  prefetch: vi.fn(),
+  back: vi.fn(),
+  forward: vi.fn(),
+};
+
+const mockSearchParams = new URLSearchParams({ [URL_PARAM.PAGE]: '1' });
+
+vi.mock('next/navigation', async () => {
+  const original = await vi.importActual('next/navigation');
+
+  return {
+    ...original,
+    useRouter: () => mockRouter,
+    useSearchParams: () => mockSearchParams,
+  };
 });
 
 const mockDataSet = PersonBriefMockSubsets[1];
@@ -34,30 +50,16 @@ describe('Card component', () => {
 
     const { name, id } = mockData;
 
-    const initialPath = `/?page=1`;
-
-    await mockRouter.push(initialPath);
-
     const { user, getByText } = render(<Card personBrief={mockData} />);
 
     await waitFor(() => {
-      expect(mockRouter).toMatchObject({
-        pathname: '/',
-        query: { page: '1' },
-      });
-
-      expect(mockRouter.query).toEqual({ page: '1' });
+      expect(mockSearchParams.get(URL_PARAM.PAGE)).toEqual('1');
     });
 
     await user.click(getByText(name));
 
     await waitFor(() => {
-      expect(mockRouter).toMatchObject({
-        pathname: '/',
-        query: { page: '1', details: id },
-      });
-
-      expect(mockRouter.query).toEqual({ page: '1', details: id });
+      expect(mockRouter.push).toHaveBeenCalledWith(`/?page=1&details=${id}`);
     });
   });
 

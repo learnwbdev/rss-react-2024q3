@@ -1,5 +1,7 @@
+'use client';
+
 import { Button } from '@shared/ui';
-import { BuggyComponent } from '@utils';
+import { ErrorSimulator } from '@utils';
 import { ReactNode, useState } from 'react';
 
 export const ErrorSection = (): ReactNode => {
@@ -12,7 +14,7 @@ export const ErrorSection = (): ReactNode => {
   return (
     <section>
       <Button text="Throw Error" onClick={handleClick} color={'warning'} />
-      {isError && <BuggyComponent />}
+      {isError && <ErrorSimulator />}
     </section>
   );
 };

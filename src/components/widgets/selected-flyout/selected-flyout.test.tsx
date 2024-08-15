@@ -1,7 +1,8 @@
 import { render, waitFor, act } from '@tests/utils';
 import { describe, it, expect, vi } from 'vitest';
 
-import { setupStore, selectItem, unselectAllItems } from '@store';
+import { setupStore } from '@store';
+import { selectItem, unselectAllItems } from '@lib-features/selected-items';
 import { SelectedFlyout } from './index';
 
 describe('SelectedFlyout component', () => {

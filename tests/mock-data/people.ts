@@ -1,4 +1,4 @@
-import { Person } from '@app-types/person';
+import { Person } from '@app-types';
 
 export const PeopleMockList: Person[] = [
   {

@@ -1,3 +1,5 @@
+'use client';
+
 import { ReactNode } from 'react';
 import LightTheme from '@icons/light-theme.svg';
 import DarkTheme from '@icons/dark-theme.svg';

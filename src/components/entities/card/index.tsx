@@ -1,8 +1,11 @@
+'use client';
+
 import { ReactNode, useCallback } from 'react';
-import { useRouter } from 'next/router';
-import { PersonBrief } from '@app-types/person';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { PersonBrief } from '@app-types';
 import { URL_PARAM } from '@constants';
-import { selectItem, unselectItem, useAppDispatch, useAppSelector } from '@store';
+import { selectItem, unselectItem } from '@lib-features/selected-items';
+import { useAppDispatch, useAppSelector } from '@hooks';
 import styles from './styles.module.css';
 
 export interface CardProps {
@@ -12,7 +15,9 @@ export interface CardProps {
 export const Card = ({ personBrief }: CardProps): ReactNode => {
   const { id, name, height } = personBrief;
 
-  const { query, push } = useRouter();
+  const router = useRouter();
+
+  const searchParams = useSearchParams();
 
   const { selectedItems } = useAppSelector((store) => store.selectedItems);
 
@@ -22,15 +27,17 @@ export const Card = ({ personBrief }: CardProps): ReactNode => {
 
   const setDetails = useCallback(
     (personId: string) => {
-      const newQuery = { ...query, [URL_PARAM.DETAILS]: personId };
+      const newSearchParams = new URLSearchParams(searchParams);
 
-      void push({ query: newQuery });
+      newSearchParams.set(URL_PARAM.DETAILS, personId);
+
+      router.push(`/?${newSearchParams.toString()}`);
     },
-    [query, push]
+    [searchParams, router]
   );
 
-  const handleOpenDetails = (e: React.MouseEvent<HTMLDivElement, MouseEvent>): void => {
-    e.stopPropagation();
+  const handleOpenDetails = (event: React.MouseEvent<HTMLDivElement, MouseEvent>): void => {
+    event.stopPropagation();
     setDetails(id);
   };
 

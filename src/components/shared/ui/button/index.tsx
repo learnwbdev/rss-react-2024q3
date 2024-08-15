@@ -1,9 +1,11 @@
+'use client';
+
 import { ComponentProps, ReactNode } from 'react';
 import styles from './button.module.css';
 
 interface ButtonProps extends ComponentProps<'button'> {
   text: string;
-  onClick?: React.MouseEventHandler;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
   disabled?: boolean;
   color?: 'primary' | 'warning';
 }

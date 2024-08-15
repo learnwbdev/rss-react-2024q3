@@ -1,11 +1,17 @@
 import { render, waitFor } from '@tests/utils';
 import { describe, it, expect, vi } from 'vitest';
-import mockRouter from 'next-router-mock';
 import { FileDownload } from './file-download';
 
-vi.mock('next/router', async () => {
-  const routerMock = await vi.importActual('next-router-mock');
-  return routerMock;
+vi.mock('next/navigation', async () => {
+  const original = await vi.importActual('next/navigation');
+
+  return {
+    ...original,
+    useRouter: () => ({
+      push: vi.fn(),
+    }),
+    useSearchParams: () => new URLSearchParams('page=1'),
+  };
 });
 
 describe('FileDownload', () => {
@@ -40,15 +46,11 @@ describe('FileDownload', () => {
     clickSpy.mockRestore();
   });
 
-  it('does not call onDownloadComplete if it is undefined', async () => {
+  it('does not call onDownloadComplete if it is undefined', () => {
     const mockUrl = 'blob:http://example.com/download';
     const mockFilename = 'test-file.csv';
 
     const clickSpy = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => ({}));
-
-    const initialPath = `/?page=1`;
-
-    await mockRouter.push(initialPath);
 
     render(<FileDownload url={mockUrl} filename={mockFilename} />);
 

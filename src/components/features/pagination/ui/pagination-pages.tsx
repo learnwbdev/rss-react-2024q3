@@ -1,3 +1,5 @@
+'use client';
+
 import { ReactNode, useContext } from 'react';
 import { PaginationItem } from './pagination-item';
 import { range } from '@utils';

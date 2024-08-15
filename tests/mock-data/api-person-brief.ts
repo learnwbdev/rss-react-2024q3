@@ -1,4 +1,4 @@
-import { ApiPersonBrief } from '@app-types/person';
+import { ApiPersonBrief } from '@app-types';
 
 const apiBaseMockData: ApiPersonBrief[] = [
   { url: 'https://swapi.dev/api/people/1/', name: 'Luke Skywalker', height: '172' },

@@ -1,4 +1,4 @@
-import { Person } from '@app-types/person';
+import { Person } from '@app-types';
 
 const person: Person = {
   id: '1',

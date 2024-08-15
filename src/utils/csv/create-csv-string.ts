@@ -1,4 +1,4 @@
-import { Person } from '@app-types/person';
+import { Person } from '@app-types';
 import { getQuotedValue } from './get-quoted-value';
 import { isObjKey } from '@utils';
 

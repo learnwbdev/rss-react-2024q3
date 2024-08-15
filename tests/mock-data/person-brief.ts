@@ -1,6 +1,6 @@
-import { PersonBrief } from '@app-types/person';
+import { PersonBrief } from '@app-types';
 
-const baseMockData: PersonBrief[] = [
+export const PersonBriefMock: PersonBrief[] = [
   { id: '1', url: 'https://swapi.dev/api/people/1/', name: 'Luke Skywalker', height: '172' },
   { id: '2', url: 'https://swapi.dev/api/people/2/', name: 'C-3PO', height: '167' },
   { id: '3', url: 'https://swapi.dev/api/people/3/', name: 'R2-D2', height: '96' },
@@ -13,7 +13,7 @@ const baseMockData: PersonBrief[] = [
   { id: '10', url: 'https://swapi.dev/api/people/10/', name: 'Obi-Wan Kenobi', height: '182' },
 ];
 
-const getSubset = (start: number, end: number): PersonBrief[] => baseMockData.slice(start, end);
+const getSubset = (start: number, end: number): PersonBrief[] => PersonBriefMock.slice(start, end);
 
 const mockDataSet1: PersonBrief[] = getSubset(0, 2);
 

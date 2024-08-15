@@ -1,3 +1,5 @@
+'use client';
+
 import { ReactNode, useContext, useCallback } from 'react';
 import ChevronLeft from '@icons/chevron-left.svg';
 import ChevronRight from '@icons/chevron-right.svg';

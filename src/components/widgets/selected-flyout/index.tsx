@@ -1,5 +1,8 @@
+'use-client';
+
 import { ReactNode } from 'react';
-import { unselectAllItems, useAppDispatch, useAppSelector } from '@store';
+import { unselectAllItems } from '@lib-features/selected-items';
+import { useAppDispatch, useAppSelector } from '@hooks';
 import { Button } from '@shared/ui';
 import { DownloadItems } from '@features';
 import styles from './styles.module.css';

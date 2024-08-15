@@ -1,4 +1,4 @@
-import { ApiPerson, Person, ApiPersonBrief, PersonBrief } from '@app-types/person';
+import { ApiPerson, Person, ApiPersonBrief, PersonBrief } from '@app-types';
 
 const getIdFromUrl = (url: string): string => url.split('/').slice(-2, -1)[0];
 

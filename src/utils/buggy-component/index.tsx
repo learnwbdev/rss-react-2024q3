@@ -1,6 +1,15 @@
+'use client';
+
 import { ReactNode } from 'react';
 
-export const BuggyComponent = (): ReactNode => {
-  throw new Error('Error for Error Boundary Check');
-  return;
+interface ErrorSimulatorProps {
+  isThrowError?: boolean;
+}
+
+export const ErrorSimulator = ({ isThrowError = true }: ErrorSimulatorProps): ReactNode => {
+  if (isThrowError) {
+    throw new Error('Simulated error for Error Boundary Check');
+  }
+
+  return <div>Everything is fine!</div>;
 };

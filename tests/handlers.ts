@@ -22,7 +22,7 @@ export const handlers = [
 
     return HttpResponse.json({ count: results.length, results: paginatedPeople });
   }),
-  http.get(`${API_URL}:id`, ({ params }) => {
+  http.get(`${API_URL}/:id`, ({ params }) => {
     const { id } = params;
 
     if (!id || typeof id !== 'string' || isNaN(parseInt(id, 10)) || parseInt(id, 10) <= 0) {
@@ -47,7 +47,7 @@ export const handlers = [
   }),
 ];
 
-export const delayedHandler = http.get(`${API_URL}:id`, async ({ params }) => {
+export const delayedHandler = http.get(`${API_URL}/:id`, async ({ params }) => {
   const { id } = params;
 
   if (!id || typeof id !== 'string' || isNaN(parseInt(id, 10)) || parseInt(id, 10) <= 0) {

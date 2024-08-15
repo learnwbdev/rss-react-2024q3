@@ -1,23 +1,24 @@
 import { render } from '@tests/utils';
 import { describe, it, expect, vi } from 'vitest';
-import mockRouter from 'next-router-mock';
-
 import { PersonBriefMockSubsets } from '@mock-data';
 import { CardList } from './index';
 
-vi.mock('next/router', async () => {
-  const routerMock = await vi.importActual('next-router-mock');
-  return routerMock;
+vi.mock('next/navigation', async () => {
+  const original = await vi.importActual('next/navigation');
+
+  return {
+    ...original,
+    useRouter: () => ({
+      push: vi.fn(),
+    }),
+    useSearchParams: () => new URLSearchParams('page=1'),
+  };
 });
 
 describe('CardList component', () => {
   describe('renders correct number of cards based on names', () => {
     PersonBriefMockSubsets.forEach((mockData, idx) => {
-      it(`with mock data ${idx}`, async () => {
-        const initialPath = `/?page=1`;
-
-        await mockRouter.push(initialPath);
-
+      it(`with mock data ${idx}`, () => {
         const { getByRole, getAllByRole, getByText } = render(<CardList results={mockData} />);
 
         const cards = getAllByRole('heading');

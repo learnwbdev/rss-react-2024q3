@@ -1,5 +1,7 @@
+'use client';
+
 import { Card } from '@entities';
-import { PersonBrief } from '@app-types/person';
+import { PersonBrief } from '@app-types';
 import { ReactNode } from 'react';
 import styles from './styles.module.css';
 

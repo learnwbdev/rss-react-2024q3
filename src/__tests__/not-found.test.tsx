@@ -1,7 +1,7 @@
 import { render } from '@tests/utils';
 import { describe, it, expect } from 'vitest';
 
-import NotFoundPage from '@pages/404';
+import NotFoundPage from '@app/not-found';
 
 describe('NotFound page', () => {
   it('renders correctly', () => {

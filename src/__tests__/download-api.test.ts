@@ -1,59 +1,58 @@
 import { describe, it, expect } from 'vitest';
 import { http, HttpResponse } from 'msw';
 import { mswServer } from '@tests/msw-server';
-import { createMocks } from 'node-mocks-http';
+import { NextRequest } from 'next/server';
 import { API_URL } from '@constants';
 import { ApiPeopleMockList, PeopleCsvList } from '@tests/mock-data';
-import handler from '@pages/api/download';
-import { NextApiRequest, NextApiResponse } from 'next';
-import { ApiPerson } from '@app-types/person';
+import { ApiPerson } from '@app-types';
+import { GET as downloadCsv } from '@app/api/download/route';
+
+const ROUTE_URL = 'http://localhost/api/download';
 
 describe('API Route: download', () => {
   it('returns a CSV string for valid ids', async () => {
     const mockData = PeopleCsvList.slice(0, 3);
-
     const ids = mockData.map(({ id }) => id).join(',');
 
-    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-      method: 'GET',
-      query: {
-        ids,
-      },
-    });
+    const url = new URL(`${ROUTE_URL}?ids=${ids}`);
+    const req = new NextRequest(url);
 
-    await handler(req, res);
+    const res = await downloadCsv(req);
 
-    expect(res.statusCode).toBe(200);
-    expect(res._getHeaders()['content-type']).toBe('text/csv');
+    expect(res.status).toBe(200);
+    expect(res.headers.get('content-type')).toBe('text/csv');
+
+    const resText = await res.text();
 
     mockData.forEach(({ csvStr }) => {
-      expect(res._getData()).toContain(csvStr);
+      expect(resText).toContain(csvStr);
     });
   });
 
   it('returns 400 if ids parameter is missing', async () => {
-    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-      method: 'GET',
-    });
+    const url = new URL(ROUTE_URL);
+    const req = new NextRequest(url);
 
-    await handler(req, res);
+    const res = await downloadCsv(req);
 
-    expect(res.statusCode).toBe(400);
-    expect(res._getData()).toEqual(JSON.stringify({ error: 'Missing or invalid ids parameter' }));
+    expect(res.status).toBe(400);
+
+    const resText = await res.text();
+    expect(resText).toEqual(JSON.stringify({ error: 'Missing or invalid ids parameter' }));
   });
 
   it('returns 500 for an invalid ids', async () => {
-    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-      method: 'GET',
-      query: {
-        ids: 'invalid',
-      },
-    });
+    const ids = 'invalid';
 
-    await handler(req, res);
+    const url = new URL(`${ROUTE_URL}?ids=${ids}`);
+    const req = new NextRequest(url);
 
-    expect(res.statusCode).toBe(500);
-    expect(res._getData()).toEqual(JSON.stringify({ error: 'Failed to generate CSV' }));
+    const res = await downloadCsv(req);
+
+    expect(res.status).toBe(500);
+
+    const resText = await res.text();
+    expect(resText).toEqual(JSON.stringify({ error: 'Failed to generate CSV' }));
   });
 
   it('returns 400 for an invalid API response', async () => {
@@ -61,25 +60,25 @@ describe('API Route: download', () => {
 
     delete mockData.height;
 
-    mswServer.use(http.get(`${API_URL}:id`, () => HttpResponse.json(mockData)));
+    mswServer.use(http.get(`${API_URL}/:id`, () => HttpResponse.json(mockData)));
 
-    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-      method: 'GET',
-      query: {
-        ids: '1',
-      },
-    });
+    const ids = '1';
 
-    await handler(req, res);
+    const url = new URL(`${ROUTE_URL}?ids=${ids}`);
+    const req = new NextRequest(url);
 
-    expect(res.statusCode).toBe(400);
-    expect(res._getData()).toEqual(JSON.stringify({ error: 'Invalid response' }));
+    const res = await downloadCsv(req);
+
+    expect(res.status).toBe(400);
+
+    const resText = await res.text();
+    expect(resText).toEqual(JSON.stringify({ error: 'Invalid response' }));
   });
 
   it('handles server errors gracefully', async () => {
     mswServer.use(
       http.get(
-        `${API_URL}:id`,
+        `${API_URL}/:id`,
         () =>
           new HttpResponse(null, {
             status: 500,
@@ -88,16 +87,16 @@ describe('API Route: download', () => {
       )
     );
 
-    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-      method: 'GET',
-      query: {
-        ids: '1,2,3',
-      },
-    });
+    const ids = '1,2,3';
 
-    await handler(req, res);
+    const url = new URL(`${ROUTE_URL}?ids=${ids}`);
+    const req = new NextRequest(url);
 
-    expect(res.statusCode).toBe(500);
-    expect(res._getData()).toEqual(JSON.stringify({ error: 'Failed to generate CSV' }));
+    const res = await downloadCsv(req);
+
+    expect(res.status).toBe(500);
+
+    const resText = await res.text();
+    expect(resText).toEqual(JSON.stringify({ error: 'Failed to generate CSV' }));
   });
 });

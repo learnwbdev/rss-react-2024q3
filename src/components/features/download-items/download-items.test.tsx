@@ -3,7 +3,8 @@ import { render, waitFor, act } from '@tests/utils';
 import { describe, it, expect, vi, beforeAll } from 'vitest';
 
 import { PeopleMockList } from '@tests/mock-data';
-import { selectItem, setupStore } from '@store';
+import { setupStore } from '@store';
+import { selectItem } from '@lib-features/selected-items';
 
 import { FileDownloadProps } from './file-download';
 import { DownloadItems } from './index';

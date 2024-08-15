@@ -1,3 +1,5 @@
+'use client';
+
 import { ReactNode, useCallback, useContext } from 'react';
 import { PageContext } from '../context';
 import styles from './pagination.module.css';

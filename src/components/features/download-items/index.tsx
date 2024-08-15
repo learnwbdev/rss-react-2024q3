@@ -1,5 +1,7 @@
+'use client';
+
 import { ReactNode, useState } from 'react';
-import { useAppSelector } from '@store';
+import { useAppSelector } from '@hooks';
 import { Button } from '@shared/ui';
 import { FileDownload } from './file-download';
 import styles from './download-items.module.css';

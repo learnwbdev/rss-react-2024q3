@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { isApiPersonBrief, isApiPerson, isApiPeople } from './guards'; // Adjust import based on your project structure
-import { ApiPeople, ApiPerson, ApiPersonBrief } from '@app-types/person';
+import { ApiPeople, ApiPerson, ApiPersonBrief } from '@app-types';
 
 const validApiPersonBrief: ApiPersonBrief = {
   url: 'https://swapi.dev/api/people/1/',

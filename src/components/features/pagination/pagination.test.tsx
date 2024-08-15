@@ -1,12 +1,27 @@
-import { render, waitFor, renderHook, act } from '@tests/utils';
-import { describe, it, expect, vi } from 'vitest';
-import mockRouter from 'next-router-mock';
-import { useLocationPage } from '@hooks';
+import { render, waitFor } from '@tests/utils';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { useSearchParams } from 'next/navigation';
 import { Pagination } from './index';
+import { URL_PARAM } from '@constants';
 
-vi.mock('next/router', async () => {
-  const routerMock = await vi.importActual('next-router-mock');
-  return routerMock;
+const mockPush = vi.fn();
+
+const createMockUseSearchParams = (initialPage: string) => {
+  const searchParams = new URLSearchParams();
+  searchParams.set(URL_PARAM.PAGE, initialPage);
+  return searchParams;
+};
+
+vi.mock('next/navigation', async () => {
+  const original = await vi.importActual('next/navigation');
+
+  return {
+    ...original,
+    useRouter: () => ({
+      push: mockPush,
+    }),
+    useSearchParams: vi.fn(),
+  };
 });
 
 vi.mock('@icons/chevron-left.svg', () => ({
@@ -20,28 +35,21 @@ vi.mock('@icons/chevron-right.svg', () => ({
 }));
 
 describe('Pagination component', () => {
+  beforeEach(() => {
+    vi.resetAllMocks();
+  });
+
   describe('updates URL query parameters on page change', () => {
     it('on specific page click', async () => {
-      const totalPages = 5;
-
       const initialPage = 1;
+
+      (useSearchParams as ReturnType<typeof vi.fn>).mockReturnValue(createMockUseSearchParams(initialPage.toString()));
+
+      const totalPages = 5;
 
       const pages = [2, 5];
 
-      const initialPath = `/?page=${initialPage}`;
-
-      await mockRouter.push(initialPath);
-
       const { getByRole, user } = render(<Pagination totalPages={totalPages} />);
-
-      await waitFor(() => {
-        expect(mockRouter).toMatchObject({
-          pathname: '/',
-          query: { page: `${initialPage}` },
-        });
-
-        expect(mockRouter.query).toEqual({ page: `${initialPage}` });
-      });
 
       for await (const page of pages) {
         const pageBtn = getByRole('button', { name: `${page}` });
@@ -49,109 +57,92 @@ describe('Pagination component', () => {
         await user.click(pageBtn);
 
         await waitFor(() => {
-          expect(mockRouter).toMatchObject({
-            pathname: '/',
-            query: { page: `${page}` },
-          });
-
-          expect(mockRouter.query).toEqual({ page: `${page}` });
+          expect(mockPush).toHaveBeenCalledWith(`/?page=${page}`);
         });
       }
     });
 
-    it('on next and previous button clicks', async () => {
+    it('on next button click', async () => {
+      const initialPage = 2;
+
+      (useSearchParams as ReturnType<typeof vi.fn>).mockReturnValue(createMockUseSearchParams(initialPage.toString()));
+
       const totalPages = 5;
 
       let page = 2;
 
-      const initialPath = `/?page=${page}`;
-
-      await mockRouter.push(initialPath);
-
       const { getByRole, user } = render(<Pagination totalPages={totalPages} />);
 
-      await waitFor(() => {
-        expect(mockRouter).toMatchObject({
-          pathname: '/',
-          query: { page: `${page}` },
-        });
-
-        expect(mockRouter.query).toEqual({ page: `${page}` });
-      });
-
       const nextButton = getByRole('button', { name: /go to next page/i });
+
       await user.click(nextButton);
 
       page += 1;
 
       await waitFor(() => {
-        expect(mockRouter).toMatchObject({
-          pathname: '/',
-          query: { page: `${page}` },
-        });
-
-        expect(mockRouter.query).toEqual({ page: `${page}` });
+        expect(mockPush).toHaveBeenCalledWith(`/?page=${page}`);
+        expect(mockPush).toHaveBeenCalledTimes(1);
       });
+    });
+
+    it('on previous button click', async () => {
+      const initialPage = 2;
+
+      (useSearchParams as ReturnType<typeof vi.fn>).mockReturnValue(createMockUseSearchParams(initialPage.toString()));
+
+      const totalPages = 5;
+
+      let page = 2;
+
+      const { getByRole, user } = render(<Pagination totalPages={totalPages} />);
 
       const prevButton = getByRole('button', { name: /go to previous page/i });
+
       await user.click(prevButton);
 
       page -= 1;
 
       await waitFor(() => {
-        expect(mockRouter).toMatchObject({
-          pathname: '/',
-          query: { page: `${page}` },
-        });
-
-        expect(mockRouter.query).toEqual({ page: `${page}` });
+        expect(mockPush).toHaveBeenLastCalledWith(`/?page=${page}`);
+        expect(mockPush).toHaveBeenCalledTimes(1);
       });
     });
   });
 
-  it('disables previous button on first page and next button on last page', async () => {
+  it('disables previous button on first page', () => {
     const totalPages = 5;
 
-    let page = 1;
+    const page = 1;
 
-    const initialPath = `/?page=${page}`;
+    (useSearchParams as ReturnType<typeof vi.fn>).mockReturnValue(createMockUseSearchParams(page.toString()));
 
-    await mockRouter.push(initialPath);
-
-    const { getByRole, user } = render(<Pagination totalPages={totalPages} />);
-
-    await waitFor(() => {
-      expect(mockRouter).toMatchObject({
-        pathname: '/',
-        query: { page: `${page}` },
-      });
-
-      expect(mockRouter.query).toEqual({ page: `${page}` });
-    });
+    const { getByRole } = render(<Pagination totalPages={totalPages} />);
 
     const prevButton = getByRole('button', { name: /go to previous page/i });
+
     expect(prevButton).toBeDisabled();
+  });
 
-    page = totalPages;
+  it('disables next button on last page', () => {
+    const totalPages = 5;
 
-    const lastPageBtn = getByRole('button', { name: `${page}` });
-    await user.click(lastPageBtn);
+    const page = totalPages;
 
-    await waitFor(() => {
-      expect(mockRouter).toMatchObject({
-        pathname: '/',
-        query: { page: `${page}` },
-      });
+    (useSearchParams as ReturnType<typeof vi.fn>).mockReturnValue(createMockUseSearchParams(page.toString()));
 
-      expect(mockRouter.query).toEqual({ page: `${page}` });
-    });
+    const { getByRole } = render(<Pagination totalPages={totalPages} />);
 
     const nextButton = getByRole('button', { name: /go to next page/i });
+
     expect(nextButton).toBeDisabled();
   });
 
   it('renders all pages when totalPages is less than or equal to 5', () => {
     const totalPages = 5;
+
+    const initialPage = 1;
+
+    (useSearchParams as ReturnType<typeof vi.fn>).mockReturnValue(createMockUseSearchParams(initialPage.toString()));
 
     const { getByRole } = render(<Pagination totalPages={totalPages} />);
 
@@ -165,6 +156,10 @@ describe('Pagination component', () => {
   it('renders pagination with ellipsis when totalPages is greater than 5', () => {
     const totalPages = 10;
 
+    const initialPage = 1;
+
+    (useSearchParams as ReturnType<typeof vi.fn>).mockReturnValue(createMockUseSearchParams(initialPage.toString()));
+
     const { getByRole, getAllByText } = render(<Pagination totalPages={totalPages} />);
 
     const ellipsis = getAllByText('...');
@@ -173,7 +168,7 @@ describe('Pagination component', () => {
       expect(ellipsisElement).toBeInTheDocument();
     });
 
-    const pages = [1, 5, 10];
+    const pages = [1, 2, 3, 10];
 
     pages.forEach((page) => {
       const pageBtn = getByRole('button', { name: `${page}` });
@@ -186,13 +181,12 @@ describe('Pagination component', () => {
     expect(lastPageBtn).toBeInTheDocument();
   });
 
-  it('renders ellipsis and current page correctly when in the middle range', async () => {
+  it('renders ellipsis and current page correctly when in the middle range', () => {
     const totalPages = 10;
+
     const currentPage = 5;
 
-    const initialPath = `/?page=${currentPage}`;
-
-    await mockRouter.push(initialPath);
+    (useSearchParams as ReturnType<typeof vi.fn>).mockReturnValue(createMockUseSearchParams(currentPage.toString()));
 
     const { getByRole, getAllByText } = render(<Pagination totalPages={totalPages} />);
 
@@ -207,13 +201,12 @@ describe('Pagination component', () => {
     expect(lastPageBtn).toBeInTheDocument();
   });
 
-  it('handles edge case where currentPage is the first page correctly', async () => {
+  it('handles edge case where currentPage is the first page correctly', () => {
     const totalPages = 10;
+
     const currentPage = 1;
 
-    const initialPath = `/?page=${currentPage}`;
-
-    await mockRouter.push(initialPath);
+    (useSearchParams as ReturnType<typeof vi.fn>).mockReturnValue(createMockUseSearchParams(currentPage.toString()));
 
     const { getByRole, getByText } = render(<Pagination totalPages={totalPages} />);
 
@@ -233,13 +226,11 @@ describe('Pagination component', () => {
     expect(lastPageBtn).toBeInTheDocument();
   });
 
-  it('handles edge case where currentPage is the last page correctly', async () => {
+  it('handles edge case where currentPage is the last page correctly', () => {
     const totalPages = 10;
     const currentPage = totalPages;
 
-    const initialPath = `/?page=${currentPage}`;
-
-    await mockRouter.push(initialPath);
+    (useSearchParams as ReturnType<typeof vi.fn>).mockReturnValue(createMockUseSearchParams(currentPage.toString()));
 
     const { getByRole, getByText } = render(<Pagination totalPages={totalPages} />);
 
@@ -257,117 +248,16 @@ describe('Pagination component', () => {
     }
   });
 
-  it('renders all pages when totalPages is less than or equal to 5', () => {
-    const totalPages = 5;
-
-    const { getByRole } = render(<Pagination totalPages={totalPages} />);
-
-    for (let page = 1; page <= totalPages; page++) {
-      const pageBtn = getByRole('button', { name: `${page}` });
-
-      expect(pageBtn).toBeInTheDocument();
-    }
-  });
-
   it('renders start and end chevrons', () => {
     const totalPages = 5;
+
+    const currentPage = 1;
+
+    (useSearchParams as ReturnType<typeof vi.fn>).mockReturnValue(createMockUseSearchParams(currentPage.toString()));
 
     const { getByTestId } = render(<Pagination totalPages={totalPages} />);
 
     expect(getByTestId('chevron-left')).toBeInTheDocument();
     expect(getByTestId('chevron-right')).toBeInTheDocument();
-  });
-
-  it('advances to next page if current page < total pages', async () => {
-    const page = 1;
-    const totalPages = 3;
-
-    const { result } = renderHook(() => useLocationPage());
-
-    act(() => {
-      result.current.setPage(page);
-    });
-
-    expect(result.current.page).toBe(page);
-
-    const { getByRole, user } = render(<Pagination totalPages={totalPages} />);
-
-    const nextPageButton = getByRole('button', { name: /go to next page/i });
-
-    expect(nextPageButton).toBeInTheDocument();
-
-    await user.click(nextPageButton);
-
-    expect(result.current.page).toBe(page + 1);
-  });
-
-  it('should not advance page if at last page', async () => {
-    const page = 3;
-    const totalPages = 3;
-
-    const { result } = renderHook(() => useLocationPage());
-
-    act(() => {
-      result.current.setPage(page);
-    });
-
-    expect(result.current.page).toBe(page);
-
-    const { getByRole, user } = render(<Pagination totalPages={totalPages} />);
-
-    const nextPageButton = getByRole('button', { name: /go to next page/i });
-
-    expect(nextPageButton).toBeInTheDocument();
-
-    await user.click(nextPageButton);
-
-    expect(result.current.page).toBe(page);
-  });
-
-  it('advances to previous page if current page > firstPage', async () => {
-    const page = 2;
-    const totalPages = 3;
-
-    const { result } = renderHook(() => useLocationPage());
-
-    act(() => {
-      result.current.setPage(page);
-    });
-
-    expect(result.current.page).toBe(page);
-
-    const { getByRole, user } = render(<Pagination totalPages={totalPages} />);
-
-    const prevPageButton = getByRole('button', { name: /go to previous page/i });
-
-    expect(prevPageButton).toBeInTheDocument();
-
-    await user.click(prevPageButton);
-
-    expect(result.current.page).toBe(page - 1);
-  });
-
-  it('should not advance if current page is first page', async () => {
-    const page = 1;
-
-    const totalPages = 3;
-
-    const { result } = renderHook(() => useLocationPage());
-
-    act(() => {
-      result.current.setPage(page);
-    });
-
-    expect(result.current.page).toBe(page);
-
-    const { getByRole, user } = render(<Pagination totalPages={totalPages} />);
-
-    const prevPageButton = getByRole('button', { name: /go to previous page/i });
-
-    expect(prevPageButton).toBeInTheDocument();
-
-    await user.click(prevPageButton);
-
-    expect(result.current.page).toBe(page);
   });
 });
