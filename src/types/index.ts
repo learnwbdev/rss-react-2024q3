@@ -11,7 +11,7 @@ export interface FormFields {
 }
 
 export interface FormState {
-  formData: FormFields | null;
+  formData: FormFields;
   isDataFresh: boolean;
 }
 
