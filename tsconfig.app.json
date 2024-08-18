@@ -33,6 +33,7 @@
       "@routes/*": ["routes/*"],
       "@store": ["store"],
       "@types": ["types"],
+      "@tests/*": ["../tests/*"],
     }
   },
   "include": ["src", "src/vite-env.d.ts", "tests"]
