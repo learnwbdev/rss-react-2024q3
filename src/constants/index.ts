@@ -1,0 +1,1 @@
+export const FORM_HIGHLIGHT_DURATION_MS = 3000;
