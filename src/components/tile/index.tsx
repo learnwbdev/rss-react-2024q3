@@ -1,27 +1,15 @@
 import { ReactNode } from 'react';
-import { FormState } from '@types';
+import { FormFields } from '@types';
 import styles from './styles.module.css';
 
 interface TileProps {
   heading: string;
-  form: FormState | null;
+  data: FormFields;
+  isDataFresh: boolean;
 }
 
-export const Tile = ({ heading, form }: TileProps): ReactNode => {
-  if (!form) {
-    return (
-      <div className={styles.tile}>
-        <div className={styles.content}>
-          <h2 className={styles.heading}>{heading}</h2>
-          <p className={styles.empty}>No data has been submitted</p>
-        </div>
-      </div>
-    );
-  }
-
-  const { formData, isDataFresh = false } = form;
-
-  const { name, age, email, password, confirmPassword, gender, termsAccepted, imageBase64, country } = formData;
+export const Tile = ({ heading, data, isDataFresh }: TileProps): ReactNode => {
+  const { name, age, email, password, confirmPassword, gender, termsAccepted, imageBase64, country } = data;
 
   const fields = [
     { key: 'name', label: 'Name', value: name },

@@ -33,6 +33,7 @@
       "@routes/*": ["routes/*"],
       "@store": ["store"],
       "@types": ["types"],
+      "@utils": ["utils"],
       "@tests/*": ["../tests/*"],
     }
   },

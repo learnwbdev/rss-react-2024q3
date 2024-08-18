@@ -27,7 +27,7 @@
 
 .tilesContainer {
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
   gap: 3rem;
 }
 
@@ -42,8 +42,8 @@
   }
 
   .tilesContainer {
-    flex-direction: row;
-    flex-wrap: wrap;
+    flex-direction: row-reverse;
+    flex-wrap: wrap-reverse;
     gap: 1rem;
   }
 }

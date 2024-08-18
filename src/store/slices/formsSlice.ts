@@ -1,38 +1,25 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { FormFields, FormState, FormType } from 'types';
+import { FormPost } from 'types';
 
 interface FormsState {
-  forms: Record<FormType, FormState | null>;
-}
-
-export interface FormAction {
-  formType: FormType;
-  data: FormFields;
+  forms: FormPost[];
 }
 
 const initialState: FormsState = {
-  forms: {
-    uncontrolled: null,
-    hook: null,
-  },
+  forms: [],
 };
 
 export const formsSlice = createSlice({
   name: 'forms',
   initialState,
   reducers: {
-    setFormData(state, action: PayloadAction<FormAction>) {
-      const { formType, data } = action.payload;
-
-      state.forms[formType] = {
-        formData: data,
-        isDataFresh: true,
-      };
+    addFormData(state, action: PayloadAction<FormPost>) {
+      state.forms.push(action.payload);
     },
-    clearFreshFlag(state, action: PayloadAction<FormType>) {
-      const formType = action.payload;
+    clearFreshFlag(state, action: PayloadAction<string>) {
+      const postId = action.payload;
 
-      const form = state.forms[formType];
+      const form = state.forms.find(({ id }) => id === postId);
 
       if (form) {
         form.isDataFresh = false;
@@ -41,4 +28,4 @@ export const formsSlice = createSlice({
   },
 });
 
-export const { setFormData, clearFreshFlag } = formsSlice.actions;
+export const { addFormData, clearFreshFlag } = formsSlice.actions;

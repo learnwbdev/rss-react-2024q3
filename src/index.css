@@ -10,6 +10,9 @@
   --border-color: #d1c4e9;
   --error-color: #b71c1c;
   --shadow-color: rgba(0, 0, 0, 0.3);
+  --shadow-secondary-color: rgba(171, 71, 188, 0.3);
+  --disabled-bg-color: #cdc4ce;
+  --disabled-text-color: #5e4b5e;
 }
 
 body {

@@ -6,9 +6,7 @@ import { Tile } from '@components';
 import styles from './styles.module.css';
 
 export const MainPage = (): ReactNode => {
-  const {
-    forms: { uncontrolled: uncontrolledForm, hook: hookForm },
-  } = useAppSelector((state) => state.forms);
+  const { forms } = useAppSelector((state) => state.forms);
 
   return (
     <main className="main-container">
@@ -29,8 +27,9 @@ export const MainPage = (): ReactNode => {
           </ul>
         </nav>
         <section className={styles.tilesContainer}>
-          <Tile heading="Uncontrolled Form Data" form={uncontrolledForm} />
-          <Tile heading="Hook Form Data" form={hookForm} />
+          {forms.map(({ id, type, data, isDataFresh }) => (
+            <Tile key={id} heading={`${type} Form Data`} data={data} isDataFresh={isDataFresh} />
+          ))}
         </section>
       </div>
     </main>
