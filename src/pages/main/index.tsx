@@ -8,13 +8,13 @@ export const MainPage = (): ReactNode => {
     <main className="main_container">
       <h1 className={styles.heading}>Main Page</h1>
       <nav>
-        <ul className={styles.nav_list}>
-          <li className={styles.nav_item}>
+        <ul className={styles.navList}>
+          <li className={styles.navItem}>
             <Link to={PATH.UNCONTROLLED_FORM} className="link">
               Go to Uncontrolled Form
             </Link>
           </li>
-          <li className={styles.nav_item}>
+          <li className={styles.navItem}>
             <Link to={PATH.HOOK_FORM} className="link">
               Go to Hook Form
             </Link>
